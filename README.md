@@ -1,6 +1,6 @@
 # Proyecto Flask + React
 
-Este proyecto combina un frontend en React con TypeScript y un backend en Flask (Python).
+Este proyecto combina un frontend en React con TypeScript y un backend en Django posiblemente (Python).
 
 ## Estructura del Proyecto
 
@@ -100,4 +100,3 @@ Para preparar la aplicación para producción:
    ```
 
 2. Configurar el backend para servir los archivos estáticos generados
-3. Configurar un servidor web como Nginx o Apache como proxy reverso
