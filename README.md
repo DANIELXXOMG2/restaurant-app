@@ -1,102 +1,66 @@
-# Proyecto Flask + React
+# Restaurante App - Aplicativo Web
 
-Este proyecto combina un frontend en React con TypeScript y un backend en Django posiblemente (Python).
+Aplicativo web para la gestión de un restaurante de comida rápida, que incluye operaciones CRUD, generación de facturas y reportes de ventas en formato XLS.
+
+## Características Principales
+
+- **Gestión del Menú**: Operaciones CRUD para productos y categorías
+- **Sistema de Pedidos**: Registro y seguimiento de pedidos
+- **Facturación**: Generación de facturas y actualización de inventario
+- **Reportes**: Exportación de reportes de ventas en formato XLS
+
+## Tecnologías
+
+- **Frontend**: React + TypeScript + Vite
+- **Backend**: Python + Flask
+- **Base de Datos**: CockroachDB
+- **Despliegue**: Vercel
 
 ## Estructura del Proyecto
 
 ```
-├── README.md                   # Documentación principal del proyecto
-├── .gitignore                  # Archivos a ignorar por git
-├── package.json                # Dependencias y scripts de frontend
-├── tsconfig.json               # Configuración de TypeScript
-│
-├── frontend/                   # Carpeta de código frontend (React/TypeScript)
-│   ├── src/                    # Código fuente de React
-│   │   ├── assets/             # Imágenes, fuentes y otros recursos estáticos
-│   │   ├── components/         # Componentes reutilizables
-│   │   ├── pages/              # Páginas/vistas de la aplicación
-│   │   ├── services/           # Servicios para conexión con API
-│   │   ├── utils/              # Funciones utilitarias
-│   │   ├── App.tsx             # Componente principal de la aplicación
-│   │   ├── main.tsx            # Punto de entrada de React
-│   │   └── ...                 # Otros archivos de configuración
-│   │
-│   ├── public/                 # Archivos públicos accesibles directamente
-│   ├── index.html              # Plantilla HTML para la aplicación
-│   └── vite.config.ts          # Configuración de Vite
-│
-├── backend/                    # Carpeta de código backend (Flask/Python)
-│   ├── app/                    # Código principal de la aplicación Flask
-│   │   ├── __init__.py         # Inicialización de la aplicación Flask
-│   │   ├── config.py           # Configuraciones del backend
-│   │   ├── models/             # Modelos de datos y esquemas
-│   │   ├── routes/             # Rutas y controladores de la API 
-│   │   ├── services/           # Servicios y lógica de negocio
-│   │   └── utils/              # Funciones utilitarias
-│   │
-│   ├── migrations/             # Migraciones de base de datos (si aplica)
-│   ├── tests/                  # Pruebas unitarias y de integración
-│   ├── .env                    # Variables de entorno (no incluir en git)
-│   ├── .flaskenv               # Variables de entorno para Flask
-│   ├── requirements.txt        # Dependencias de Python
-│   └── run.py                  # Script para ejecutar la aplicación
-│
-└── db/                         # Archivos relacionados con la base de datos (scripts, backups, etc.)
+restaurant-app/
+├── frontend/                # Interfaz de usuario (React)
+├── backend/                 # API REST (Flask)
+└── db/                      # Esquemas y utilidades de base de datos
 ```
 
-## Configuración del Entorno
+## Instalación y Uso
 
-### Requisitos previos
-- Python 3.8+
+### Requisitos Previos
 - Node.js 18+
-- npm o yarn
+- Python 3.8+
+- Cuenta en CockroachDB
+- Cuenta en Vercel
 
-### Configuración del Backend (Flask)
-1. Crear un entorno virtual de Python:
-   ```
-   python -m venv venv
-   source venv/bin/activate  # En Windows: venv\Scripts\activate
-   ```
+### Configuración del Backend
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # En Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-2. Instalar dependencias:
-   ```
-   cd backend
-   pip install -r requirements.txt
-   ```
+### Configuración del Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-3. Configurar variables de entorno en `.env` y `.flaskenv`
-
-4. Ejecutar el servidor de desarrollo:
-   ```
-   python run.py
-   ```
-
-### Configuración del Frontend (React)
-1. Instalar dependencias:
-   ```
-   cd frontend
-   npm install
-   ```
-
-2. Ejecutar el servidor de desarrollo:
-   ```
-   npm run dev
-   ```
-
-## Desarrollo
-
-- El backend estará disponible en `http://localhost:5000`
-- El frontend estará disponible en `http://localhost:5173`
-- Para realizar peticiones al backend desde el frontend, se recomienda configurar un proxy en `vite.config.ts`
+### Variables de Entorno
+Crea un archivo `.env` en la raíz del proyecto:
+```
+DATABASE_URL="postgresql://usuario:contraseña@host:puerto/basedatos?sslmode=verify-full"
+SECRET_KEY="tu_clave_secreta"
+```
 
 ## Despliegue
 
-Para preparar la aplicación para producción:
+### En Vercel
+1. Conecta el repositorio a Vercel
+2. Configura las variables de entorno
+3. Vercel detectará automáticamente la configuración y desplegará la aplicación
 
-1. Construir el frontend:
-   ```
-   cd frontend
-   npm run build
-   ```
-
-2. Configurar el backend para servir los archivos estáticos generados
+## Licencia
+[MIT](LICENSE)

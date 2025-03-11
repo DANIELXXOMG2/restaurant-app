@@ -1,54 +1,35 @@
-# Aplicación de Gestión para Restaurante de Comida Rápida
+# Aplicativo Web para Gestión de Restaurante
 
-## Descripción General
-Sistema web completo para la gestión de un restaurante de comida rápida con ofertas, permitiendo administración del menú, gestión de pedidos y reservas, y generación de informes financieros.
+## Objetivo Principal
+Desarrollar un pequeño aplicativo web desplegado en VERCEL, con acceso a una base de datos CockRoachDB para la gestión de un restaurante de comida rápida.
 
-## Objetivos Principales
+## Requisitos Funcionales
 
-### 1. Gestión del Menú Dinámico
-- **Administración de platos:**
-  - Crear, leer, actualizar y eliminar (CRUD) platos del menú.
-  - Asignar categorías, precios, y descripción detallada a cada plato.
-  - Administrar imágenes de los productos.
-- **Gestión de promociones:**
-  - Configurar promociones y ofertas diarias/semanales.
-  - Establecer precios especiales y condiciones de las ofertas.
-  - Programar activación y desactivación automática de promociones.
-- **Visibilidad del menú:**
-  - Interfaz de usuario atractiva para visualizar el menú.
-  - Filtros por categorías, precios y promociones activas.
+### 1. Operaciones CRUD
+- Implementar operaciones completas de Crear, Leer, Actualizar y Eliminar para:
+  - Gestión de platos/productos del menú
+  - Categorías de productos
+  - Usuarios del sistema
+  - Pedidos de clientes
 
-### 2. Módulo de Pedidos y Reservas
-- **Sistema de pedidos online:**
-  - Interfaz intuitiva para que los clientes realicen pedidos.
-  - Carrito de compras con cálculo automático del total.
-  - Opciones de personalización de pedidos.
-- **Gestión de reservas:**
-  - Reservar mesa para consumo en el local.
-  - Programar hora de recogida para pedidos para llevar.
-  - Sistema de notificaciones para confirmación de reservas.
-- **Control de inventario:**
-  - Actualización en tiempo real del stock de ingredientes.
-  - Alertas de stock bajo para reabastecimiento.
-  - Trazabilidad del uso de ingredientes por pedido.
+### 2. Módulo de Facturación
+- Generar facturas de venta para los pedidos realizados
+- Actualizar automáticamente el stock/disponibilidad de productos
+- Mantener un historial de transacciones
 
-### 3. Sistema de Facturación e Informes
-- **Facturación instantánea:**
-  - Generación automática de facturas digitales.
-  - Envío de comprobantes por correo electrónico.
-  - Registro de métodos de pago utilizados.
-- **Informes de ventas:**
-  - Exportación de reportes diarios en formato XLS.
-  - Filtros por rango de horas, tipo de promoción, categoría de productos.
-  - Visualización de gráficos de rendimiento y tendencias de ventas.
-- **Panel de análisis:**
-  - Métricas clave de desempeño (KPIs) del negocio.
-  - Análisis de rentabilidad por producto/promoción.
-  - Información sobre preferencias de los clientes.
+### 3. Reportes
+- Generar un reporte total de ventas en formato XLS
+- Filtrar ventas por fechas y categorías de productos
+- Mostrar información detallada de ventas por producto
 
-## Requisitos Técnicos
-- Frontend desarrollado en React con TypeScript
-- Backend en Python utilizando Flask
-- Base de datos relacional para almacenamiento de datos
-- API RESTful para comunicación entre frontend y backend
-- Diseño responsive para acceso desde dispositivos móviles
+## Arquitectura Técnica
+- **Frontend**: React con TypeScript, desplegado en Vercel
+- **Backend**: Python con Flask, implementado como funciones serverless en Vercel
+- **Base de Datos**: CockroachDB para almacenamiento persistente
+- **Comunicación**: API RESTful entre frontend y backend
+
+## Entregables
+1. Aplicación web funcional desplegada en Vercel
+2. Código fuente organizado en repositorio GitHub
+3. Documentación básica de uso
+4. Base de datos configurada en CockroachDB
