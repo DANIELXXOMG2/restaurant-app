@@ -1,16 +1,16 @@
-import { FC } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { FC, InputHTMLAttributes, TextareaHTMLAttributes, forwardRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-interface InputProps {
-  name: string;
-  label: string;
-  type: string;
-  placeholder?: string;
-  validation?: Record<string, any>;
-  className?: string;
+// Extender las propiedades nativas de input y textarea
+interface InputBaseProps {
+  label?: string;
+  error?: string;
   multiline?: boolean;
+  className?: string;
 }
+
+type InputProps = InputBaseProps & 
+  (InputHTMLAttributes<HTMLInputElement> | TextareaHTMLAttributes<HTMLTextAreaElement>);
 
 // Componente para mostrar mensajes de error
 const InputError: FC<{ message: string }> = ({ message }) => {
@@ -26,78 +26,56 @@ const InputError: FC<{ message: string }> = ({ message }) => {
   );
 };
 
-// Función auxiliar para encontrar errores en el formulario
-const findInputError = (errors: Record<string, any>, name: string) => {
-  const filtered = Object.keys(errors)
-    .filter(key => key === name)
-    .reduce((obj, key) => {
-      return {
-        ...obj,
-        error: errors[key]
-      };
-    }, {});
-  return filtered;
-};
-
-// Función auxiliar para verificar si un input tiene un error
-const isFormInvalid = (err: Record<string, any>) => {
-  return Object.keys(err).length > 0;
-};
-
-export const Input: FC<InputProps> = ({
-  label,
-  name,
-  type,
-  placeholder,
-  validation,
-  className = '',
-  multiline = false
-}) => {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext();
-
-  const inputError = findInputError(errors, name);
-  const isInvalid = isFormInvalid(inputError);
-
-  return (
-    <div className={`flex flex-col w-full gap-1 ${className}`}>
-      <div className="flex justify-between">
-        <label htmlFor={name} className="font-medium text-gray-700 capitalize">
-          {label}
-        </label>
-        <AnimatePresence mode="wait" initial={false}>
-          {isInvalid && (
+export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
+  ({ label, error, multiline = false, className = '', ...props }, ref) => {
+    const isInvalid = !!error;
+    
+    return (
+      <div className={`flex flex-col w-full gap-1 ${className}`}>
+        {label && (
+          <div className="flex justify-between">
+            <label htmlFor={props.id || props.name} className="font-medium text-gray-700">
+              {label}
+            </label>
+            <AnimatePresence mode="wait" initial={false}>
+              {isInvalid && (
+                <InputError
+                  message={error!}
+                  key={error}
+                />
+              )}
+            </AnimatePresence>
+          </div>
+        )}
+        
+        {!label && isInvalid && (
+          <AnimatePresence mode="wait" initial={false}>
             <InputError
-              message={inputError.error.message}
-              key={inputError.error.message}
+              message={error!}
+              key={error}
             />
-          )}
-        </AnimatePresence>
+          </AnimatePresence>
+        )}
+        
+        {multiline ? (
+          <textarea
+            className={`w-full p-3 border rounded-md ${
+              isInvalid ? 'border-red-500' : 'border-gray-300'
+            } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            rows={4}
+            ref={ref as React.RefObject<HTMLTextAreaElement>}
+            {...props as TextareaHTMLAttributes<HTMLTextAreaElement>}
+          />
+        ) : (
+          <input
+            className={`w-full p-3 border rounded-md ${
+              isInvalid ? 'border-red-500' : 'border-gray-300'
+            } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            ref={ref as React.RefObject<HTMLInputElement>}
+            {...props as InputHTMLAttributes<HTMLInputElement>}
+          />
+        )}
       </div>
-      
-      {multiline ? (
-        <textarea
-          id={name}
-          className={`w-full p-3 border rounded-md ${
-            isInvalid ? 'border-red-500' : 'border-gray-300'
-          } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-          placeholder={placeholder}
-          rows={4}
-          {...register(name, validation)}
-        />
-      ) : (
-        <input
-          id={name}
-          type={type}
-          className={`w-full p-3 border rounded-md ${
-            isInvalid ? 'border-red-500' : 'border-gray-300'
-          } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-          placeholder={placeholder}
-          {...register(name, validation)}
-        />
-      )}
-    </div>
-  );
-}; 
+    );
+  }
+); 

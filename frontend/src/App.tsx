@@ -1,169 +1,106 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { RegisterPage } from './pages/RegisterPage';
-import { Icons } from './components/icons';
+import { LoginPage } from './pages/LoginPage';
+import { HomePage } from './pages/HomePage';
+import { MenuPage } from './pages/MenuPage';
+import { CartPage } from './pages/CartPage';
+import { Navbar } from './components/ui/Navbar';
+import { Toaster } from 'react-hot-toast';
 import './App.css';
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
-        <nav className="bg-white shadow">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16">
-              <div className="flex">
-                <div className="flex-shrink-0 flex items-center">
-                  <Link to="/" className="flex items-center text-2xl font-bold text-blue-600">
-                    <Icons.logo className="h-8 w-8 mr-2 text-blue-600" />
-                    <span>RestauranteApp</span>
-                  </Link>
-                </div>
-                <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                  <Link 
-                    to="/" 
-                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                  >
-                    <Icons.home className="h-5 w-5 mr-1" />
-                    Inicio
-                  </Link>
-                  <Link 
-                    to="/menu" 
-                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                  >
-                    <Icons.restaurant className="h-5 w-5 mr-1" />
-                    Menú
-                  </Link>
-                  <Link 
-                    to="/reservas" 
-                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                  >
-                    <Icons.calendar className="h-5 w-5 mr-1" />
-                    Reservas
-                  </Link>
-                  <Link 
-                    to="/ubicacion" 
-                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                  >
-                    <Icons.location className="h-5 w-5 mr-1" />
-                    Ubicación
-                  </Link>
-                </div>
-              </div>
-              <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-3">
-                <Link 
-                  to="/cart" 
-                  className="relative p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100"
-                >
-                  <Icons.cart className="h-6 w-6" />
-                  <span className="absolute top-0 right-0 h-5 w-5 text-xs flex items-center justify-center bg-red-500 text-white rounded-full">3</span>
-                </Link>
-                <Link 
-                  to="/login" 
-                  className="inline-flex items-center text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  <Icons.login className="h-5 w-5 mr-1" />
-                  Iniciar Sesión
-                </Link>
-                <Link 
-                  to="/register" 
-                  className="inline-flex items-center text-white bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  <Icons.register className="h-5 w-5 mr-1" />
-                  Registrarse
-                </Link>
-              </div>
-              {/* Menú móvil (hamburguesa) */}
-              <div className="flex items-center sm:hidden">
-                <button className="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
-                  <Icons.menu className="h-6 w-6" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </nav>
-
-        <main>
+      <div className="min-h-screen bg-gray-50 flex flex-col relative">
+        {/* Elementos decorativos */}
+        <div className="absolute top-0 right-0 w-72 h-72 bg-primary-100 rounded-full -mr-24 -mt-24 opacity-50"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-accent-100 rounded-full -ml-32 -mb-32 opacity-50"></div>
+        
+        <Navbar />
+        <main className="flex-grow relative z-10">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/menu" element={<MenuPage />} />
+            <Route path="/carrito" element={<CartPage />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            {/* Otras rutas de la aplicación */}
+            <Route path="/promociones" element={<PromocionesTemp />} />
+            <Route path="/locales" element={<LocalesTemp />} />
           </Routes>
         </main>
+        <footer className="bg-white border-t border-primary-100 py-8 relative z-10 mt-12">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+              <div>
+                <h3 className="text-lg font-display font-semibold text-primary-700 mb-4">Sabor Express</h3>
+                <p className="text-gray-600 mb-4">Deliciosa comida rápida con ingredientes de calidad, preparada al momento para ti.</p>
+                <div className="flex space-x-4">
+                  <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-800">
+                    <span className="sr-only">Facebook</span>
+                    <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
+                    </svg>
+                  </a>
+                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-800">
+                    <span className="sr-only">Instagram</span>
+                    <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+              <div>
+                <h3 className="text-lg font-display font-semibold text-primary-700 mb-4">Enlaces Rápidos</h3>
+                <ul className="space-y-2">
+                  <li><Link to="/" className="text-gray-600 hover:text-primary-600">Inicio</Link></li>
+                  <li><Link to="/menu" className="text-gray-600 hover:text-primary-600">Menú</Link></li>
+                  <li><Link to="/promociones" className="text-gray-600 hover:text-primary-600">Promociones</Link></li>
+                  <li><Link to="/locales" className="text-gray-600 hover:text-primary-600">Locales</Link></li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-lg font-display font-semibold text-primary-700 mb-4">Horario</h3>
+                <ul className="space-y-2 text-gray-600">
+                  <li>Lunes a Viernes: 11:00 - 22:00</li>
+                  <li>Sábados y Domingos: 12:00 - 23:00</li>
+                  <li className="pt-2 font-medium">¡Servicio a domicilio disponible!</li>
+                </ul>
+              </div>
+            </div>
+            <div className="border-t border-gray-200 pt-4">
+              <p className="text-gray-600 text-center">© 2024 Sabor Express. Todos los derechos reservados.</p>
+            </div>
+          </div>
+        </footer>
       </div>
+      <Toaster position="top-right" />
     </Router>
   );
 }
 
-// Página de inicio mejorada con iconos
-const HomePage = () => {
+// Componentes temporales para páginas no implementadas aún
+function PromocionesTemp() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Banner principal */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-8 shadow-lg mb-12">
-        <h1 className="text-4xl font-bold text-white mb-4">¡Bienvenido a nuestro Restaurante!</h1>
-        <p className="text-xl text-blue-100 mb-8">
-          Disfruta de la mejor experiencia gastronómica con nosotros.
-        </p>
-        <div className="flex space-x-4">
-          <Link to="/menu" className="inline-flex items-center bg-white text-blue-700 hover:bg-blue-50 px-6 py-3 rounded-lg text-lg font-medium shadow-md transition-colors">
-            <Icons.restaurant className="h-6 w-6 mr-2" />
-            Ver Menú
-          </Link>
-          <Link to="/reservas" className="inline-flex items-center bg-blue-500 text-white hover:bg-blue-400 px-6 py-3 rounded-lg text-lg font-medium shadow-md transition-colors">
-            <Icons.calendar className="h-6 w-6 mr-2" />
-            Reservar Mesa
-          </Link>
-        </div>
-      </div>
-      
-      {/* Secciones destacadas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-        {/* Platos Populares */}
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <div className="flex items-center mb-4">
-            <Icons.pizza className="h-8 w-8 text-orange-500 mr-3" />
-            <h2 className="text-2xl font-semibold text-gray-800">Platos Populares</h2>
-          </div>
-          <p className="text-gray-600 mb-4">
-            Descubre nuestros platos más solicitados por los clientes.
-          </p>
-          <Link to="/menu/populares" className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
-            Ver platos populares
-            <Icons.chevronRight className="h-5 w-5 ml-1" />
-          </Link>
-        </div>
-        
-        {/* Promociones */}
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <div className="flex items-center mb-4">
-            <Icons.price className="h-8 w-8 text-green-500 mr-3" />
-            <h2 className="text-2xl font-semibold text-gray-800">Promociones</h2>
-          </div>
-          <p className="text-gray-600 mb-4">
-            Aprovecha nuestras ofertas especiales y descuentos del día.
-          </p>
-          <Link to="/promociones" className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
-            Ver promociones
-            <Icons.chevronRight className="h-5 w-5 ml-1" />
-          </Link>
-        </div>
-        
-        {/* Ubicación */}
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <div className="flex items-center mb-4">
-            <Icons.map className="h-8 w-8 text-red-500 mr-3" />
-            <h2 className="text-2xl font-semibold text-gray-800">Ubicación</h2>
-          </div>
-          <p className="text-gray-600 mb-4">
-            Encuéntranos fácilmente en el centro de la ciudad.
-          </p>
-          <Link to="/ubicacion" className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
-            Cómo llegar
-            <Icons.chevronRight className="h-5 w-5 ml-1" />
-          </Link>
-        </div>
-      </div>
+    <div className="container mx-auto py-12 px-4 text-center">
+      <h1 className="text-3xl font-display font-bold text-primary-600 mb-4">Promociones</h1>
+      <p className="text-gray-600 mb-6">Esta página está en construcción. Pronto tendremos promociones exclusivas para ti.</p>
+      <Link to="/" className="text-primary-600 hover:text-primary-800 font-medium">
+        ← Volver al inicio
+      </Link>
     </div>
   );
-};
+}
+
+function LocalesTemp() {
+  return (
+    <div className="container mx-auto py-12 px-4 text-center">
+      <h1 className="text-3xl font-display font-bold text-primary-600 mb-4">Nuestros Locales</h1>
+      <p className="text-gray-600 mb-6">Esta página está en construcción. Próximamente podrás ver todos nuestros locales.</p>
+      <Link to="/" className="text-primary-600 hover:text-primary-800 font-medium">
+        ← Volver al inicio
+      </Link>
+    </div>
+  );
+}
 
 export default App;
