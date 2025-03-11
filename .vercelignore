@@ -37,4 +37,8 @@ Thumbs.db
 
 # Otros
 **/.git
-**/.github 
+**/.github
+
+# Importante: NO ignorar estas carpetas
+!.certs
+!backend/app 
