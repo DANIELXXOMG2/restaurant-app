@@ -69,11 +69,11 @@ export const RegisterForm: FC<RegisterFormProps> = ({
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="relative">
             <Input
-              name="nombre"
               label="Nombre completo"
               type="text"
               placeholder="Ingresa tu nombre completo"
-              validation={{ required: 'Este campo es obligatorio' }}
+              {...methods.register('nombre')}
+              error={methods.formState.errors.nombre?.message}
               className="pl-10"
             />
             <div className="absolute left-3 top-10">
@@ -83,11 +83,11 @@ export const RegisterForm: FC<RegisterFormProps> = ({
           
           <div className="relative">
             <Input
-              name="email"
               label="Correo electrónico"
               type="email"
               placeholder="ejemplo@correo.com"
-              validation={{ required: 'Este campo es obligatorio' }}
+              {...methods.register('email')}
+              error={methods.formState.errors.email?.message}
               className="pl-10"
             />
             <div className="absolute left-3 top-10">
@@ -98,10 +98,11 @@ export const RegisterForm: FC<RegisterFormProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="relative">
               <Input
-                name="telefono"
                 label="Teléfono (opcional)"
                 type="tel"
                 placeholder="000-000-0000"
+                {...methods.register('telefono')}
+                error={methods.formState.errors.telefono?.message}
                 className="pl-10"
               />
               <div className="absolute left-3 top-10">
@@ -127,11 +128,11 @@ export const RegisterForm: FC<RegisterFormProps> = ({
           
           <div className="relative">
             <Input
-              name="password"
               label="Contraseña"
               type="password"
               placeholder="********"
-              validation={{ required: 'Este campo es obligatorio' }}
+              {...methods.register('password')}
+              error={methods.formState.errors.password?.message}
               className="pl-10"
             />
             <div className="absolute left-3 top-10">
@@ -141,11 +142,11 @@ export const RegisterForm: FC<RegisterFormProps> = ({
           
           <div className="relative">
             <Input
-              name="confirmPassword"
               label="Confirmar contraseña"
               type="password"
               placeholder="********"
-              validation={{ required: 'Este campo es obligatorio' }}
+              {...methods.register('confirmPassword')}
+              error={methods.formState.errors.confirmPassword?.message}
               className="pl-10"
             />
             <div className="absolute left-3 top-10">
