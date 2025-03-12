@@ -7,6 +7,29 @@ const API_URL = isProd
   ? 'https://restaurant-app-tau-ten.vercel.app/api' 
   : '/api';
 
+// Configurar instancia de Axios con opciones avanzadas
+const apiClient = axios.create({
+  baseURL: API_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  },
+  withCredentials: false // Necesario para CORS
+});
+
+// Añadir interceptor para manejar errores
+apiClient.interceptors.response.use(
+  response => response,
+  error => {
+    console.error('Error en la petición:', error);
+    if (error.response) {
+      console.error('Respuesta del servidor:', error.response.data);
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Interfaces para los datos de autenticación
 export interface RegisterData {
   nombre: string;
@@ -38,7 +61,12 @@ class AuthService {
   // Método para registrar un nuevo usuario
   async register(userData: RegisterData): Promise<AuthResponse> {
     try {
-      const response = await axios.post(`${API_URL}/auth/register`, userData);
+      console.log('Enviando solicitud de registro a:', `${API_URL}/auth/register`);
+      console.log('Datos:', userData);
+      
+      const response = await apiClient.post('/auth/register', userData);
+      
+      console.log('Respuesta recibida:', response.data);
       
       if (response.data.token) {
         // Guardar el token en localStorage
@@ -56,7 +84,7 @@ class AuthService {
   // Método para iniciar sesión
   async login(credentials: LoginData): Promise<AuthResponse> {
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, credentials);
+      const response = await apiClient.post('/auth/login', credentials);
       
       if (response.data.token) {
         // Guardar el token en localStorage

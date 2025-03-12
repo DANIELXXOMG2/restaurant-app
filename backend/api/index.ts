@@ -17,17 +17,23 @@ testConnection().catch(err => {
 // Crear una instancia de Express para Vercel
 const app = express();
 
-// Configurar middlewares
-app.use(cors());
+// Configurar CORS para permitir solicitudes desde cualquier origen
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
+
+// Resto de middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configurar rutas
-app.use('/api/auth', authRouter);
-app.use('/api/productos', productosRouter);
+// Configurar rutas - Eliminar el prefijo /api para que funcione correctamente en Vercel
+app.use('/auth', authRouter);
+app.use('/productos', productosRouter);
 
 // Ruta de prueba
-app.get('/api', (_req, res) => {
+app.get('/', (_req, res) => {
   res.json({
     success: true,
     message: 'API de Restaurant App funcionando correctamente',
@@ -47,10 +53,12 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
 
 // Función handler para Vercel
 export default (req: VercelRequest, res: VercelResponse) => {
-  // La URL de Vercel incluye la ruta completa, así que necesitamos mantener solo /api y lo que sigue
+  // Eliminar el prefijo /api de la URL para que Express pueda manejarla correctamente
   const url = req.url || '';
-  // Modificar la URL para que Express la procese correctamente
-  req.url = url.replace(/^\/api\//, '/api/');
+  req.url = url.replace(/^\/api/, '');
+  
+  // Registrar la solicitud para depuración
+  console.log(`Recibida solicitud: ${req.method} ${req.url}`);
   
   // Manejar la solicitud con Express
   return app(req, res);
