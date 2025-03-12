@@ -1,8 +1,11 @@
 // Servicio para manejar las peticiones a la API
 
-// En despliegue, las peticiones a /api son manejadas por Vercel
-// En desarrollo, se utiliza el proxy configurado en vite.config.ts
-const API_URL = '/api';
+// Configurar la URL base según el entorno
+const isProd = import.meta.env.PROD;
+// En producción usar la URL absoluta, en desarrollo usar la URL relativa con proxy
+const API_URL = isProd 
+  ? 'https://restaurant-app-tau-ten.vercel.app/api' 
+  : '/api';
 
 export const fetchHello = async () => {
   try {

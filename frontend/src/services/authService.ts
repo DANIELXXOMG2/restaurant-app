@@ -1,9 +1,11 @@
 import axios from 'axios';
 
-// Definición de la URL base para las peticiones al backend
-// En despliegue, las peticiones a /api son manejadas por Vercel
-// En desarrollo, se utiliza el proxy configurado en vite.config.ts
-const API_URL = '/api';
+// Configurar la URL base según el entorno
+const isProd = import.meta.env.PROD;
+// En producción usar la URL absoluta, en desarrollo usar la URL relativa con proxy
+const API_URL = isProd 
+  ? 'https://restaurant-app-tau-ten.vercel.app/api' 
+  : '/api';
 
 // Interfaces para los datos de autenticación
 export interface RegisterData {

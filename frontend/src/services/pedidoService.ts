@@ -2,8 +2,12 @@
 
 import axios from 'axios';
 
-// URL de la API (se utiliza el proxy configurado en vite.config.ts)
-const API_URL = '/api';
+// Configurar la URL base según el entorno
+const isProd = import.meta.env.PROD;
+// En producción usar la URL absoluta, en desarrollo usar la URL relativa con proxy
+const API_URL = isProd 
+  ? 'https://restaurant-app-tau-ten.vercel.app/api' 
+  : '/api';
 
 // Interfaces de datos
 export interface DetallePedido {
