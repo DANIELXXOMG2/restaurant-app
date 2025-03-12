@@ -57,7 +57,10 @@ SECRET_KEY="tu_clave_secreta"
 
 ### En Vercel
 1. Conecta el repositorio a Vercel
-2. Configura las variables de entorno
+2. Configura las variables de entorno necesarias:
+   - **DATABASE_URL**: Tu URL de conexión a CockroachDB
+   - **JWT_SECRET**: Tu clave secreta para autenticación
+   - Cualquier otra variable que necesite tu aplicación
 3. Para el framework, selecciona "Other"
 4. Configura el build command como: `cd frontend && npm install && npm run build`
 5. Configura el output directory como: `frontend/dist`
