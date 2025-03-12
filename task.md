@@ -20,11 +20,11 @@
 - [x] Implementar endpoints CRUD:
   - [x] `/api/auth` (registro, login)
   - [x] `/api/productos` (GET, POST, PUT, DELETE)
-  - [ ] `/api/categorias` (GET, POST, PUT, DELETE)
-  - [ ] `/api/pedidos` (GET, POST, PUT, DELETE)
+  - [x] `/api/categorias` (GET, POST, PUT, DELETE)
+  - [x] `/api/pedidos` (GET, POST, PUT, DELETE)
 
 ### 4. Funcionalidades Especiales
-- [ ] Generar factura de venta
+- [x] Generar factura de venta
 - [x] Actualizar stock de productos
 - [x] Generar reporte de ventas en XLS
 - [x] Implementar autenticación JWT
@@ -49,22 +49,22 @@
 - [x] Diseñar e implementar:
   - [x] Navbar/Header
   - [x] Formulario de login
-  - [ ] Tarjetas de productos
-  - [ ] Formularios CRUD
-  - [ ] Carrito de compras
-  - [ ] Tabla de pedidos
+  - [x] Tarjetas de productos
+  - [x] Formularios CRUD
+  - [x] Carrito de compras
+  - [x] Tabla de pedidos
 
 ### 3. Páginas
-- [ ] Implementar páginas principales:
+- [x] Implementar páginas principales:
   - [x] Inicio/Dashboard
-  - [ ] Gestión de menú
-  - [ ] Gestión de pedidos
-  - [ ] Generación de reportes
-  - [ ] Facturación
+  - [x] Gestión de menú
+  - [x] Gestión de pedidos
+  - [x] Generación de reportes
+  - [x] Facturación
 
 ### 4. Funcionalidades Especiales
-- [ ] Visualización de facturas
-- [ ] Descarga de reportes XLS
+- [x] Visualización de facturas
+- [x] Descarga de reportes XLS
 - [x] Gestión de estado con React Query
 
 ## Despliegue
