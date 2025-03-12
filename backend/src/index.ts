@@ -49,10 +49,12 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
   });
 });
 
-// Iniciar el servidor
-app.listen(PORT, () => {
-  console.log(`Servidor ejecutándose en el puerto ${PORT}`);
-  console.log(`URL: http://localhost:${PORT}`);
-});
+// Iniciar el servidor solo si este archivo se ejecuta directamente (no cuando se importa)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Servidor ejecutándose en el puerto ${PORT}`);
+    console.log(`URL: http://localhost:${PORT}`);
+  });
+}
 
 export default app; 

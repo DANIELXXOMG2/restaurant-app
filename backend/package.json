@@ -4,7 +4,7 @@
   "description": "Backend API para aplicación de gestión de restaurante",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc --project tsconfig.vercel.json",
     "start": "node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "lint": "eslint . --ext .ts",
