@@ -1,1 +1,0 @@
-el @vercel_app.py va mas o menos asi, vercel mariquea mucho con python
