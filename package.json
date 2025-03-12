@@ -1,0 +1,19 @@
+{
+  "name": "restaurant-app",
+  "version": "1.0.0",
+  "description": "Aplicativo web para la gestión de un restaurante de comida rápida",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "prepare-deploy": "cd frontend && npm install && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["restaurant", "food", "cockroachdb", "flask", "react"],
+  "author": "Daniel",
+  "license": "MIT",
+  "overrides": {
+    "react": "$react",
+    "react-dom": "$react-dom"
+  }
+} 

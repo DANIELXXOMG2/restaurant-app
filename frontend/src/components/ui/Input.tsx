@@ -34,7 +34,7 @@ export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputPro
       <div className={`flex flex-col w-full gap-1 ${className}`}>
         {label && (
           <div className="flex justify-between">
-            <label htmlFor={props.id || props.name} className="font-medium text-gray-700">
+            <label htmlFor={props.id || props.name} className="font-medium text-gray-700 dark:text-gray-300">
               {label}
             </label>
             <AnimatePresence mode="wait" initial={false}>
@@ -60,8 +60,8 @@ export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputPro
         {multiline ? (
           <textarea
             className={`w-full p-3 border rounded-md ${
-              isInvalid ? 'border-red-500' : 'border-gray-300'
-            } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              isInvalid ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+            } focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white`}
             rows={4}
             ref={ref as React.RefObject<HTMLTextAreaElement>}
             {...props as TextareaHTMLAttributes<HTMLTextAreaElement>}
@@ -69,8 +69,8 @@ export const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputPro
         ) : (
           <input
             className={`w-full p-3 border rounded-md ${
-              isInvalid ? 'border-red-500' : 'border-gray-300'
-            } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              isInvalid ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+            } focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white`}
             ref={ref as React.RefObject<HTMLInputElement>}
             {...props as InputHTMLAttributes<HTMLInputElement>}
           />

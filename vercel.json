@@ -1,42 +1,32 @@
 {
   "version": 2,
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
   "builds": [
     {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "frontend/dist"
-      }
-    },
-    {
-      "src": "backend/vercel_app.py",
+      "src": "backend/vercel-python-wsgi.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "15mb",
-        "runtime": "python3.9"
+        "runtime": "python3.9",
+        "includeFiles": ["backend/**", ".certs/**"]
       }
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "backend/vercel_app.py"
+      "dest": "backend/vercel-python-wsgi.py"
     },
     {
-      "src": "/(assets/.*)",
-      "dest": "frontend/dist/$1"
-    },
-    {
-      "src": "/(.*\\.(js|css|svg|ico|jpg|jpeg|png|gif|webp))",
-      "dest": "frontend/dist/$1"
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
-      "dest": "frontend/dist/index.html"
+      "dest": "/index.html"
     }
   ],
   "env": {
-    "FLASK_APP": "run.py",
+    "FLASK_APP": "backend/run.py",
     "FLASK_ENV": "production",
     "PYTHON_VERSION": "3.9"
   }

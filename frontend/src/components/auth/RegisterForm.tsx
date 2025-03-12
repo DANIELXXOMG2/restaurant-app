@@ -60,8 +60,8 @@ export const RegisterForm: FC<RegisterFormProps> = ({
       className="max-w-md w-full mx-auto"
     >
       <div className="flex justify-center mb-6">
-        <div className="h-20 w-20 rounded-full bg-blue-100 flex items-center justify-center">
-          <Icons.register className="h-10 w-10 text-blue-600" />
+        <div className="h-20 w-20 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+          <Icons.register className="h-10 w-10 text-blue-600 dark:text-blue-400" />
         </div>
       </div>
       
@@ -111,13 +111,13 @@ export const RegisterForm: FC<RegisterFormProps> = ({
             </div>
             
             <div className="flex flex-col gap-1">
-              <label className="font-medium text-gray-700 flex items-center gap-1">
+              <label className="font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
                 <Icons.userSettings className="h-5 w-5 text-gray-400" />
                 Tipo de usuario
               </label>
               <select
                 {...methods.register('rol')}
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               >
                 <option value="cliente">Cliente</option>
                 <option value="empleado">Empleado</option>
@@ -154,11 +154,11 @@ export const RegisterForm: FC<RegisterFormProps> = ({
             </div>
           </div>
           
-          <div className="bg-blue-50 p-4 rounded-md border border-blue-200">
-            <h4 className="text-sm font-medium text-blue-800 flex items-center gap-1">
+          <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-md border border-blue-200 dark:border-blue-800">
+            <h4 className="text-sm font-medium text-blue-800 dark:text-blue-300 flex items-center gap-1">
               <Icons.info className="h-5 w-5" /> Requisitos de contraseña:
             </h4>
-            <ul className="text-xs text-blue-600 mt-2 ml-6 list-disc">
+            <ul className="text-xs text-blue-600 dark:text-blue-400 mt-2 ml-6 list-disc">
               <li>Mínimo 8 caracteres</li>
               <li>Al menos una letra mayúscula</li>
               <li>Al menos un número</li>
@@ -175,9 +175,9 @@ export const RegisterForm: FC<RegisterFormProps> = ({
               Crear cuenta
             </Button>
             
-            <p className="mt-4 text-center text-sm text-gray-600">
+            <p className="mt-4 text-center text-sm text-gray-600 dark:text-gray-300">
               ¿Ya tienes una cuenta?{' '}
-              <a href="/login" className="font-medium text-blue-600 hover:text-blue-500 inline-flex items-center">
+              <a href="/login" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 inline-flex items-center">
                 <Icons.login className="h-4 w-4 mr-1" />
                 Inicia sesión
               </a>

@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 // Definición de la URL base para las peticiones al backend
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// En despliegue, las peticiones a /api son manejadas por Vercel
+// En desarrollo, se utiliza el proxy configurado en vite.config.ts
+const API_URL = '/api';
 
 // Interfaces para los datos de autenticación
 export interface RegisterData {

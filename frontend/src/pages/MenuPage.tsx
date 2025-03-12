@@ -2,6 +2,9 @@ import { useState, useEffect, ReactNode } from 'react';
 import { ProductCard } from '../components/ui/ProductCard';
 import { Icons } from '../components/icons';
 import { Button } from '../components/ui/Button';
+import { PageTitle } from '../components/ui/PageTitle';
+import { useCart } from '../contexts/CartContext';
+import toast from 'react-hot-toast';
 
 // Interfaces para los tipos de datos
 interface Categoria {
@@ -94,6 +97,24 @@ const productosEjemplo: Producto[] = [
     categoria_id: 3,
     imagen_url: 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/platos/coca-cola.jpg',
     disponible: true
+  },
+  {
+    id: 6,
+    nombre: 'Jugo Natural',
+    descripcion: 'Jugo natural de naranja o mandarina',
+    precio: 7000,
+    categoria_id: 3,
+    imagen_url: 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/platos/jugo-natural.jpg',
+    disponible: true
+  },
+  {
+    id: 7,
+    nombre: 'Helado de Vainilla',
+    descripcion: 'Helado cremoso de vainilla con toppings',
+    precio: 8000,
+    categoria_id: 4,
+    imagen_url: 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/platos/helado-vainilla.jpg',
+    disponible: true
   }
 ];
 
@@ -103,6 +124,7 @@ export function MenuPage() {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<number | null>(null);
   const [busqueda, setBusqueda] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { addItem } = useCart();
 
   // Función que simula la conexión con la API (se reemplazará cuando esté listo el backend)
   useEffect(() => {
@@ -120,10 +142,21 @@ export function MenuPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Función para agregar productos al carrito (simulada por ahora)
+  // Función para agregar productos al carrito
   const handleAddToCart = (id: number) => {
-    console.log(`Producto ${id} agregado al carrito`);
-    // Aquí se implementará la lógica para agregar al carrito
+    const producto = productos.find(p => p.id === id);
+    if (producto) {
+      addItem({
+        id: producto.id,
+        nombre: producto.nombre,
+        precio: producto.precio,
+        imagen_url: producto.imagen_url || '',
+      });
+      toast.success(`¡${producto.nombre} agregado al carrito!`, {
+        duration: 2000,
+        position: 'bottom-right'
+      });
+    }
   };
 
   // Filtrar productos por categoría y búsqueda
@@ -154,10 +187,11 @@ export function MenuPage() {
 
   return (
     <div className="container mx-auto px-4 py-12">
+      <PageTitle title="Menú" />
       <div className="max-w-4xl mx-auto text-center mb-10">
         <span className="text-2xl text-primary-500 mb-2">Saborea la Diferencia</span>
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-4">Nuestro Menú</h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-gray-100 mb-4">Nuestro Menú</h1>
+        <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
           Descubre el sabor inigualable de nuestra comida preparada con ingredientes frescos y recetas exclusivas.
         </p>
       </div>
@@ -174,7 +208,7 @@ export function MenuPage() {
               placeholder="Buscar platillos, ingredientes..."
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
-              className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 transition-colors"
+              className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 transition-colors dark:bg-gray-700 dark:text-white"
             />
           </div>
         </div>
@@ -184,8 +218,8 @@ export function MenuPage() {
             variant="outline"
             className={`rounded-full px-5 py-2.5 opacity-70 hover:opacity-100 transition-all border-gray-300 ${
               categoriaSeleccionada === null 
-                ? 'bg-gray-900 text-white border-transparent opacity-100'
-                : 'hover:bg-gray-200'
+                ? 'bg-gray-900 text-white border-transparent opacity-100 hover:bg-gray-700'
+                : 'hover:bg-gray-200 dark:hover:bg-gray-700'
             }`}
             onClick={() => setCategoriaSeleccionada(null)}
           >
@@ -199,8 +233,8 @@ export function MenuPage() {
               variant="outline"
               className={`rounded-full px-5 py-2.5 opacity-70 hover:opacity-100 transition-all border-gray-300 ${
                 categoriaSeleccionada === categoria.id 
-                  ? 'bg-gray-900 text-white border-transparent opacity-100'
-                  : 'hover:bg-gray-200'
+                  ? 'bg-gray-900 text-white border-transparent opacity-100 hover:bg-gray-700'
+                  : 'hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
               onClick={() => setCategoriaSeleccionada(categoria.id)}
             >
@@ -214,27 +248,10 @@ export function MenuPage() {
       {/* Contenido principal - Lista de productos */}
       {isLoading ? (
         <div className="flex justify-center items-center h-64">
-          <div className="animate-spin h-8 w-8 border-4 border-primary-500 rounded-full border-t-transparent"></div>
-          <span className="ml-2 text-gray-600">Cargando menú...</span>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
         </div>
-      ) : productosFiltrados.length === 0 ? (
-        <div className="text-center py-16 bg-gray-50 rounded-xl">
-          <Icons.alert className="h-16 w-16 mx-auto text-primary-300" />
-          <h3 className="mt-4 text-xl font-medium text-gray-900">No se encontraron productos</h3>
-          <p className="mt-2 text-gray-500">Intenta cambiar los filtros o la búsqueda.</p>
-          <Button 
-            variant="outline" 
-            className="mt-6 border-primary-300"
-            onClick={() => {
-              setBusqueda('');
-              setCategoriaSeleccionada(null);
-            }}
-          >
-            Restablecer filtros
-          </Button>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      ) : productosFiltrados.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {productosFiltrados.map(producto => (
             <ProductCard
               key={producto.id}
@@ -248,6 +265,25 @@ export function MenuPage() {
               onAddToCart={handleAddToCart}
             />
           ))}
+        </div>
+      ) : (
+        <div className="text-center py-12">
+          <Icons.search className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+          <h3 className="mt-4 text-xl font-medium text-gray-900 dark:text-gray-100">No se encontraron productos</h3>
+          <p className="mt-2 text-gray-600 dark:text-gray-300">
+            Intenta con otra búsqueda o selecciona una categoría diferente.
+          </p>
+          <Button
+            variant="outline"
+            className="mt-4"
+            onClick={() => {
+              setBusqueda('');
+              setCategoriaSeleccionada(null);
+            }}
+          >
+            <Icons.search className="h-5 w-5 mr-2" />
+            Mostrar todos los productos
+          </Button>
         </div>
       )}
     </div>

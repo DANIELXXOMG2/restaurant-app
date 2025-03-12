@@ -1,6 +1,8 @@
 import { Button } from './Button';
 import { Card } from './Card';
 import { Icons } from '../icons';
+import { getImageProxy } from '../../services/s3Service';
+import { useEffect, useState } from 'react';
 
 interface ProductCardProps {
   id: number;
@@ -10,7 +12,7 @@ interface ProductCardProps {
   imagen_url: string;
   disponible: boolean;
   categoria: string;
-  onAddToCart?: (id: number) => void;
+  onAddToCart: (id: number) => void;
 }
 
 export function ProductCard({
@@ -23,9 +25,33 @@ export function ProductCard({
   categoria,
   onAddToCart
 }: ProductCardProps) {
+  const [imageUrl, setImageUrl] = useState<string>(
+    'https://via.placeholder.com/300x200?text=Cargando...'
+  );
+  const [imageError, setImageError] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Usar directamente la función getImageProxy para todas las imágenes
+    // para evitar problemas de CORS
+    try {
+      setImageUrl(getImageProxy(imagen_url));
+    } catch (error) {
+      console.error('Error al procesar la URL de la imagen:', error);
+      setImageError(true);
+    }
+  }, [imagen_url]);
+
   const handleAddToCart = () => {
-    if (onAddToCart) {
+    if (onAddToCart && disponible) {
       onAddToCart(id);
+    }
+  };
+
+  const handleImageError = () => {
+    if (!imageError) {
+      // Si hay un error al cargar la imagen, usar un placeholder
+      setImageError(true);
+      setImageUrl(`https://via.placeholder.com/300x200?text=${encodeURIComponent(nombre)}`);
     }
   };
 
@@ -39,12 +65,13 @@ export function ProductCard({
   };
 
   return (
-    <Card className="overflow-hidden flex flex-col h-full border border-primary-100 shadow-card hover:shadow-lg transition-shadow duration-300 rounded-xl">
+    <Card className="overflow-hidden flex flex-col h-full border border-primary-100 shadow-card hover:shadow-lg transition-shadow duration-300 rounded-xl dark:border-primary-700 dark:bg-gray-800">
       <div className="relative">
         <img 
-          src={imagen_url} 
+          src={imageUrl} 
           alt={nombre} 
           className="w-full h-48 object-cover rounded-t-xl"
+          onError={handleImageError}
         />
         <div className="absolute top-2 right-2 bg-primary-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
           {categoria}
@@ -55,37 +82,23 @@ export function ProductCard({
           </div>
         )}
       </div>
-      <div className="p-5 flex flex-col flex-grow">
-        <h3 className="text-lg font-bold text-gray-900 mb-1 font-display">{nombre}</h3>
-        <p className="text-gray-600 text-sm mb-4 flex-grow">{descripcion}</p>
-        <div className="flex justify-between items-center mt-2">
-          <div className="relative">
-            <span className="text-xl font-bold text-primary-600">{formatPrice(precio)}</span>
-            {Math.random() > 0.7 && (
-              <div className="absolute -top-3 -right-3 bg-accent-500 text-white text-xs font-bold py-0.5 px-2 rounded-md transform rotate-3 shadow-sm">
-                ¡Oferta!
-              </div>
-            )}
-          </div>
+      
+      <div className="p-4 flex-grow flex flex-col">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 line-clamp-1">{nombre}</h3>
+        <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2 flex-grow">{descripcion}</p>
+        <div className="flex items-center justify-between mt-auto">
+          <span className="text-lg font-bold text-primary-600 dark:text-primary-400">{formatPrice(precio)}</span>
           <Button 
-            onClick={handleAddToCart} 
+            variant="primary" 
+            size="sm" 
+            onClick={handleAddToCart}
             disabled={!disponible}
-            size="sm"
-            variant="primary"
-            className="rounded-full px-4"
+            className={!disponible ? 'opacity-50 cursor-not-allowed' : ''}
           >
             <Icons.cart className="h-4 w-4 mr-1" />
             Agregar
           </Button>
         </div>
-        
-        {/* Indicador de popularidad */}
-        {Math.random() > 0.6 && (
-          <div className="flex items-center mt-3 text-xs text-gray-500">
-            <Icons.favorite className="h-4 w-4 text-primary-500 mr-1" />
-            <span>¡Uno de los más pedidos!</span>
-          </div>
-        )}
       </div>
     </Card>
   );

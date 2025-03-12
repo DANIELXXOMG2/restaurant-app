@@ -1,8 +1,8 @@
 // Servicio para manejar las peticiones a la API
 
-const API_URL = import.meta.env.PROD 
-  ? '/api' 
-  : 'http://localhost:5000/api';
+// En despliegue, las peticiones a /api son manejadas por Vercel
+// En desarrollo, se utiliza el proxy configurado en vite.config.ts
+const API_URL = '/api';
 
 export const fetchHello = async () => {
   try {

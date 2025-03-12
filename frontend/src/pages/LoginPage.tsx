@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
+import { PageTitle } from '../components/ui/PageTitle';
 
 // Esquema de validación para el formulario de login
 const loginSchema = z.object({
@@ -56,25 +57,26 @@ export function LoginPage() {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-primary-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-white to-primary-50 dark:from-gray-900 dark:to-gray-800 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <PageTitle title="Iniciar Sesión" />
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <div className="text-5xl mb-4">🍔</div>
-        <h2 className="text-center text-3xl font-display font-bold text-primary-700">
-          ¡Bienvenido a Sabor Express!
+        <h2 className="text-center text-3xl font-display font-bold text-primary-700 dark:text-primary-400">
+          ¡Bienvenido a Pizza Daniel's!
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
+        <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
           ¿No tienes una cuenta?{' '}
-          <Link to="/register" className="font-medium text-primary-600 hover:text-primary-500">
+          <Link to="/register" className="font-medium text-primary-600 border-b-2 border-primary-600 hover:text-primary-500 hover:border-primary-500 dark:text-primary-400 dark:border-primary-400">
             Regístrate aquí
           </Link>
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <Card className="px-4 py-8 shadow-card rounded-2xl sm:px-10 border border-primary-100">
+        <Card className="px-4 py-8 shadow-card rounded-2xl sm:px-10 border border-primary-100 dark:border-primary-800">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Correo electrónico
               </label>
               <div className="mt-1">
@@ -90,7 +92,7 @@ export function LoginPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Contraseña
               </label>
               <div className="mt-1">
@@ -111,15 +113,15 @@ export function LoginPage() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded dark:border-gray-600 dark:bg-gray-700"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                   Recordarme
                 </label>
               </div>
 
               <div className="text-sm">
-                <Link to="/forgot-password" className="font-medium text-primary-600 hover:text-primary-500">
+                <Link to="/forgot-password" className="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
                   ¿Olvidaste tu contraseña?
                 </Link>
               </div>
@@ -132,7 +134,7 @@ export function LoginPage() {
                 fullWidth
                 disabled={isLoading}
                 isLoading={isLoading}
-                className="rounded-lg py-2.5"
+                className="rounded-lg py-2.5 bg-blue-500 text-white hover:bg-blue-600"
               >
                 Iniciar sesión
               </Button>

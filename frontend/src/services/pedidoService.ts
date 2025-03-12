@@ -2,10 +2,8 @@
 
 import axios from 'axios';
 
-// URL de la API (se puede cambiar según el entorno)
-const API_URL = import.meta.env.PROD 
-  ? '/api' 
-  : 'http://localhost:5000/api';
+// URL de la API (se utiliza el proxy configurado en vite.config.ts)
+const API_URL = '/api';
 
 // Interfaces de datos
 export interface DetallePedido {

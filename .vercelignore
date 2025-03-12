@@ -41,4 +41,5 @@ Thumbs.db
 
 # Importante: NO ignorar estas carpetas
 !.certs
-!backend/app 
+!backend/app
+!frontend/dist 

@@ -16,7 +16,7 @@ INSERT INTO categorias (nombre, descripcion, imagen_url) VALUES
 
 -- Insertar platos
 INSERT INTO platos (nombre, descripcion, precio, categoria_id, imagen_url, disponible) VALUES
-('Hamburguesa Clásica', 'Hamburguesa con carne de res, lechuga, tomate y queso', 15000, 1, 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/platos/hamburguesa-clasica.jpg', TRUE),
+('Hamburguesa Clásica', 'Hamburguesa con carne de res, lechuga, tomate y queso', 10000, 1, 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/platos/hamburguesa-clasica.jpg', TRUE),
 ('Hamburguesa Doble', 'Doble carne, doble queso y tocineta', 25000, 1, 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/platos/hamburguesa-doble.jpg', TRUE),
 ('Pizza Margarita', 'Pizza con salsa de tomate, queso mozzarella y albahaca', 35000, 2, 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/platos/pizza-margarita.jpg', TRUE),
 ('Pizza Pepperoni', 'Pizza con pepperoni y queso', 40000, 2, 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/platos/pizza-pepperoni.jpg', TRUE),

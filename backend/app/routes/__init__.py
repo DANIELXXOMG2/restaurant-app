@@ -2,4 +2,5 @@ from flask import Blueprint
 
 main_bp = Blueprint('main', __name__)
 
-from app.routes import views 
+from . import views
+from .images_routes import images_bp 

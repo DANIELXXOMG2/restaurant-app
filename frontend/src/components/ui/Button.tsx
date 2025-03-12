@@ -16,16 +16,17 @@ export const Button: FC<ButtonProps> = ({
   isLoading = false,
   disabled = false,
   fullWidth = false,
+  onClick,
   ...props
 }) => {
   // Estilos base del botón
-  const baseStyles = 'flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
+  const baseStyles = 'flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer w-auto';
   
   // Estilos según la variante
   const variantStyles = {
     primary: 'bg-primary-500 hover:bg-primary-600 text-white focus:ring-primary-500 shadow-sm',
     secondary: 'bg-secondary-500 hover:bg-secondary-600 text-white focus:ring-secondary-500 shadow-sm',
-    outline: 'border border-gray-300 hover:bg-gray-50 text-gray-700 focus:ring-primary-500',
+    outline: 'border border-gray-300 hover:bg-gray-50 text-gray-700 focus:ring-primary-500 active:bg-gray-100',
     accent: 'bg-accent-500 hover:bg-accent-600 text-white focus:ring-accent-500 shadow-sm',
     danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500 shadow-sm',
   };
@@ -41,13 +42,21 @@ export const Button: FC<ButtonProps> = ({
   const widthStyles = fullWidth ? 'w-full' : '';
   
   // Estilos cuando está deshabilitado o cargando
-  const disabledStyles = (disabled || isLoading) ? 'opacity-50 cursor-not-allowed' : '';
+  const disabledStyles = (disabled || isLoading) ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'pointer-events-auto';
+
+  // Manejador de clic con prevención de comportamiento predeterminado
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!disabled && !isLoading && onClick) {
+      onClick(e);
+    }
+  };
 
   return (
     <button
       type={type}
       className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${widthStyles} ${disabledStyles} ${className}`}
       disabled={disabled || isLoading}
+      onClick={handleClick}
       {...props}
     >
       {isLoading ? (

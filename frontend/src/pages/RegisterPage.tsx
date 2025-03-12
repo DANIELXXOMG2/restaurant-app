@@ -1,7 +1,8 @@
-import { FC, useState } from 'react';
-import { RegisterForm } from '../components/auth/RegisterForm';
+import { useState } from 'react';
 import authService, { RegisterData } from '../services/authService';
 import { AxiosError } from 'axios';
+import { PageTitle } from '../components/ui/PageTitle';
+import { RegisterForm } from '../components/auth/RegisterForm';
 
 // Definimos el tipo directamente sin crear un esquema Zod completo
 type RegisterFormData = {
@@ -19,7 +20,7 @@ interface ApiErrorResponse {
   errors?: Record<string, string[]>;
 }
 
-export const RegisterPage: FC = () => {
+export function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -68,19 +69,20 @@ export const RegisterPage: FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-white to-primary-50 dark:from-gray-900 dark:to-gray-800 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <PageTitle title="Crear Cuenta" />
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
           Crea tu cuenta
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
+        <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
           Regístrate para disfrutar de nuestros servicios
         </p>
       </div>
 
       {error && (
         <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded relative dark:bg-red-900/20 dark:border-red-500 dark:text-red-400" role="alert">
             <span className="block sm:inline">{error}</span>
           </div>
         </div>
@@ -91,4 +93,4 @@ export const RegisterPage: FC = () => {
       </div>
     </div>
   );
-}; 
+} 
