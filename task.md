@@ -73,7 +73,7 @@
 - [x] Configuración básica de vercel.json
 - [x] Configuración de variables de entorno
 - [x] Despliegue de prueba
-- [ ] Despliegue final
+- [x] Despliegue final
 
 ### 2. CockroachDB
 - [x] Creación de la base de datos

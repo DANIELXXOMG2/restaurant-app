@@ -66,5 +66,16 @@ SECRET_KEY="tu_clave_secreta"
 5. Configura el output directory como: `frontend/dist`
 6. Configurar el directorio raíz como: `./`
 
+### Estructura Serverless
+El backend está configurado para funcionar como una función serverless en Vercel:
+
+- El punto de entrada principal está en `/backend/api/index.ts`
+- La configuración de redirecciones está en `vercel.json`
+- Para probar la API después del despliegue, puedes usar:
+  ```bash
+  cd backend
+  npm run test:vercel https://tu-url-de-vercel.app
+  ```
+
 ## Licencia
 [MIT](LICENSE)
