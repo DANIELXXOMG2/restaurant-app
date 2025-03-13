@@ -37,21 +37,35 @@ app.use(cors({
     // Permitir solicitudes sin origen (como aplicaciones móviles, curl, etc.)
     if (!origin) return callback(null, true);
     
-    // Lista de orígenes permitidos
-    const allowedOrigins = [
+    // Si ALLOWED_ORIGINS es '*', permitir cualquier origen
+    if (process.env.ALLOWED_ORIGINS === '*') {
+      return callback(null, true);
+    }
+    
+    // Lista de orígenes permitidos desde variables de entorno
+    const allowedOriginsEnv = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [];
+    
+    // Lista de orígenes permitidos hardcodeados
+    const allowedOriginsHardcoded = [
       'http://localhost:5173',  // Frontend local (Vite)
       'http://localhost:4173',  // Frontend local (Vite preview)
       'http://localhost',       // Frontend en Docker
       'http://localhost:80',    // Frontend en Docker
-      /^https:\/\/.*\.azurewebsites\.net$/  // Cualquier dominio de Azure App Service
+      'http://frontend',        // Nombre del servicio en Docker Compose
+      'https://f7ea-179-63-189-229.ngrok-free.app', // URL específica de ngrok
+      /^https:\/\/.*\.azurewebsites\.net$/,  // Cualquier dominio de Azure App Service
+      /^https:\/\/.*\.ngrok-free\.app$/      // Cualquier dominio de ngrok
     ];
+    
+    // Combinar ambas listas
+    const allowedOrigins = [...allowedOriginsEnv, ...allowedOriginsHardcoded];
     
     // Verificar si el origen está permitido
     const allowed = allowedOrigins.some(allowedOrigin => {
       if (typeof allowedOrigin === 'string') {
         return allowedOrigin === origin;
       }
-      return allowedOrigin.test(origin);
+      return allowedOrigin.test && allowedOrigin.test(origin);
     });
     
     if (allowed) {

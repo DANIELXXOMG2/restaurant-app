@@ -1,56 +1,46 @@
-networks:
-  app-network:
-    driver: bridge
-
 services:
   # Servicio de backend
   backend:
     build:
       context: ./backend
-    image: restaurantapp/backend:latest
+    image: ${DOCKER_REGISTRY_SERVER:-restaurantapp}/backend:latest
     restart: always
-    networks:
-      - app-network
-    env_file:
-      - ./backend/.env
     environment:
       - NODE_ENV=production
       - PORT=3000
-    ports:
-      - "3000:3000"  # Exponer el puerto para desarrollo local, se puede comentar en producción
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/check-db"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-    volumes:
-      - ./logs:/app/logs  # Volumen para logs
 
   # Servicio de frontend
   frontend:
     build:
       context: ./frontend
       args:
-        - VITE_API_URL=http://backend:3000  # URL interna para desarrollo
         - VITE_AWS_REGION=${VITE_AWS_REGION:-us-east-2}
         - VITE_AWS_ACCESS_KEY_ID=${VITE_AWS_ACCESS_KEY_ID}
         - VITE_AWS_SECRET_ACCESS_KEY=${VITE_AWS_SECRET_ACCESS_KEY}
         - VITE_AWS_BUCKET_NAME=${VITE_AWS_BUCKET_NAME:-restaurant-items-by-danielxxomg}
-    image: restaurantapp/frontend:latest
+    image: ${DOCKER_REGISTRY_SERVER:-restaurantapp}/frontend:latest
     restart: always
-    networks:
-      - app-network
+    environment:
+      - VITE_AWS_REGION=${VITE_AWS_REGION:-us-east-2}
+      - VITE_AWS_ACCESS_KEY_ID=${VITE_AWS_ACCESS_KEY_ID}
+      - VITE_AWS_SECRET_ACCESS_KEY=${VITE_AWS_SECRET_ACCESS_KEY}
+      - VITE_AWS_BUCKET_NAME=${VITE_AWS_BUCKET_NAME:-restaurant-items-by-danielxxomg}
+    ports:
+      - "80:80"
     depends_on:
       - backend
-    ports:
-      - "80:80"  # Exponer el puerto para acceso directo
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-
-volumes:
-  logs:
