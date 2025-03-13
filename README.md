@@ -14,7 +14,7 @@ Aplicativo web para la gestión de un restaurante de comida rápida, que incluye
 - **Frontend**: React + TypeScript + Vite
 - **Backend**: TypeScript + Express
 - **Base de Datos**: CockroachDB
-- **Despliegue**: Vercel
+- **Despliegue**: Vercel, Azure App Service (Docker)
 
 ## Estructura del Proyecto
 
@@ -22,7 +22,9 @@ Aplicativo web para la gestión de un restaurante de comida rápida, que incluye
 restaurant-app/
 ├── frontend/                # Interfaz de usuario (React)
 ├── backend/                 # API REST (Express/TypeScript)
-└── db/                      # Esquemas y utilidades de base de datos
+├── db/                      # Esquemas y utilidades de base de datos
+├── docker-compose.yml       # Configuración de Docker Compose para despliegue
+└── deploy-azure.ps1         # Script de PowerShell para despliegue en Azure
 ```
 
 ## Instalación y Uso
@@ -30,7 +32,7 @@ restaurant-app/
 ### Requisitos Previos
 - Node.js 18+
 - Cuenta en CockroachDB
-- Cuenta en Vercel
+- Cuenta en Vercel o Microsoft Azure
 
 ### Configuración del Backend
 ```bash
@@ -50,12 +52,13 @@ npm run dev
 Crea un archivo `.env` en la raíz del proyecto:
 ```
 DATABASE_URL="postgresql://usuario:contraseña@host:puerto/basedatos?sslmode=verify-full"
-SECRET_KEY="tu_clave_secreta"
+JWT_SECRET="tu_clave_secreta"
+JWT_EXPIRATION="24h"
 ```
 
-## Despliegue
+## Opciones de Despliegue
 
-### En Vercel
+### Despliegue en Vercel
 1. Conecta el repositorio a Vercel
 2. Configura las variables de entorno necesarias:
    - **DATABASE_URL**: Tu URL de conexión a CockroachDB
@@ -65,6 +68,26 @@ SECRET_KEY="tu_clave_secreta"
 4. Configura el build command como: `cd frontend && npm install && npm run build`
 5. Configura el output directory como: `frontend/dist`
 6. Configurar el directorio raíz como: `./`
+
+### Despliegue en Azure App Service con Docker
+Para desplegar la aplicación en Azure App Service utilizando Docker Compose:
+
+1. **Preparación**:
+   - Asegúrate de tener instalado [Docker Desktop](https://www.docker.com/products/docker-desktop/) y [Azure CLI](https://docs.microsoft.com/es-es/cli/azure/install-azure-cli)
+   - Configura las variables de entorno necesarias (puedes usar el archivo `.env.azure.example` como guía)
+
+2. **Despliegue Automático (Recomendado)**:
+   ```powershell
+   # Ejecuta el script de despliegue automático
+   .\deploy-azure.ps1
+   ```
+
+3. **Despliegue Manual**:
+   - Sigue las instrucciones detalladas en el archivo [AZURE-DEPLOY.md](AZURE-DEPLOY.md)
+
+4. **Verificación**:
+   - Una vez desplegada, la aplicación estará disponible en: `https://<nombre-app>.azurewebsites.net`
+   - La API estará accesible en: `https://<nombre-app>.azurewebsites.net/api`
 
 ### Estructura Serverless
 El backend está configurado para funcionar como una función serverless en Vercel:

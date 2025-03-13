@@ -70,7 +70,13 @@ import {
   Smartphone,
   Tablet,
   Laptop,
-  Printer
+  Printer,
+  
+  // Archivos y reportes
+  FileSpreadsheet,
+  FileText,
+  Download,
+  Upload
 } from 'lucide-react';
 
 // Exportamos los iconos organizados por categorías para facilitar su uso
@@ -146,6 +152,12 @@ export const Icons = {
   tablet: Tablet,
   computer: Laptop,
   print: Printer,
+  
+  // Archivos y reportes
+  excel: FileSpreadsheet,
+  document: FileText,
+  download: Download,
+  upload: Upload,
   
   // Logo personalizado (componente SVG)
   logo: ({ className, ...props }: React.SVGProps<SVGSVGElement>) => (

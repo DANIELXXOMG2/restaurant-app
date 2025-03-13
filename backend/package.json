@@ -1,44 +1,45 @@
 {
-  "name": "restaurant-app-backend",
+  "name": "restaurant-backend",
   "version": "1.0.0",
-  "description": "Backend API para aplicación de gestión de restaurante",
+  "description": "Backend para la aplicación de restaurante",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc && tsc --project tsconfig.vercel.json",
     "start": "node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "lint": "eslint . --ext .ts",
-    "deploy": "vercel deploy --prod",
-    "test:vercel": "node vercel-test.js"
+    "build": "tsc",
+    "init-db": "ts-node src/db/init.ts",
+    "test-db": "ts-node src/utils/test-connection.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "restaurant",
+    "api",
+    "cockroachdb",
+    "typescript",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
   "dependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
-    "@types/jsonwebtoken": "^9.0.5",
-    "@types/node": "^20.11.5",
-    "@types/pg": "^8.10.9",
-    "@vercel/node": "^3.0.17",
-    "bcryptjs": "^2.4.3",
+    "@types/express": "4.17.11",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.13.10",
+    "@types/pg": "^8.11.11",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.4.7",
     "exceljs": "^4.4.0",
-    "express": "^4.18.2",
+    "express": "4.17.1",
     "jsonwebtoken": "^9.0.2",
-    "pg": "^8.11.3",
-    "typescript": "^5.3.3",
-    "zod": "^3.22.4"
+    "pg": "^8.14.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.6",
-    "@types/uuid": "^10.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.19.0",
-    "@typescript-eslint/parser": "^6.19.0",
-    "eslint": "^8.56.0",
     "ts-node-dev": "^2.0.0"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "author": "",
-  "license": "MIT"
+  }
 }

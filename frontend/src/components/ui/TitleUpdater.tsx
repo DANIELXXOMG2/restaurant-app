@@ -20,8 +20,10 @@ export function TitleUpdater() {
       '/login': 'Iniciar Sesión',
       '/register': 'Crear Cuenta',
       '/pedidos': 'Mis Pedidos',
+      '/perfil': 'Mi Perfil',
       '/promociones': 'Promociones',
-      '/locales': 'Nuestros Locales'
+      '/locales': 'Nuestros Locales',
+      '/admin/test-s3': 'Verificación S3'
     };
     
     // Obtener el título correspondiente a la ruta actual

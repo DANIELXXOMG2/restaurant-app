@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { uploadFile } from '../services/s3Service';
 
 interface ImageUploaderProps {
+  id?: string;
   folder?: string;
   onUploadSuccess?: (url: string, key: string) => void;
   onUploadError?: (error: string) => void;
@@ -13,6 +14,7 @@ interface ImageUploaderProps {
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({
+  id,
   folder = 'uploads',
   onUploadSuccess,
   onUploadError,
@@ -100,6 +102,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       />
       
       <button
+        id={id}
         type="button"
         onClick={triggerFileInput}
         disabled={isUploading}

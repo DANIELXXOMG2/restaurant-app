@@ -12,6 +12,7 @@ type RegisterFormData = {
   confirmPassword: string;
   telefono?: string;
   rol: 'cliente' | 'administrador' | 'empleado';
+  imagen_url?: string;
 };
 
 // Interfaz para el formato de error de la API
@@ -41,6 +42,11 @@ export function RegisterPage() {
       // Si hay teléfono, lo incluimos
       if (data.telefono) {
         registerData.telefono = data.telefono;
+      }
+      
+      // Si hay imagen de perfil, la incluimos
+      if (data.imagen_url) {
+        registerData.imagen_url = data.imagen_url;
       }
       
       // Llamamos al servicio de autenticación

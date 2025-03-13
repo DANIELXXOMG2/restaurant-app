@@ -1,13 +1,13 @@
 import { Icons } from '../icons';
 
 interface CartItemProps {
-  id: number;
+  id: string;
   nombre: string;
   precio: number;
   cantidad: number;
   imagen_url: string;
-  onRemove: (id: number) => void;
-  onUpdateQuantity: (id: number, quantity: number) => void;
+  onRemove: (id: string) => void;
+  onUpdateQuantity: (id: string, quantity: number) => void;
 }
 
 export function CartItem({

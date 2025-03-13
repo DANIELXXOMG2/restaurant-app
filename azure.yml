@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  backend:
+    image: restaurantregistryo.azurecr.io/backend:latest
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=restaurante_app_secreto_seguro_2024
+      - JWT_EXPIRATION=24h
+
+  frontend:
+    image: restaurantregistryo.azurecr.io/frontend:latest
+    restart: always
+    environment:
+      - VITE_AWS_REGION=us-east-2
+      - VITE_AWS_ACCESS_KEY_ID=${VITE_AWS_ACCESS_KEY_ID}
+      - VITE_AWS_SECRET_ACCESS_KEY=${VITE_AWS_SECRET_ACCESS_KEY}
+      - VITE_AWS_BUCKET_NAME=restaurant-items-by-danielxxomg
+    ports:
+      - "80:80"
+    depends_on:
+      - backend 

@@ -1,289 +1,109 @@
-import { useState, useEffect, ReactNode } from 'react';
-import { ProductCard } from '../components/ui/ProductCard';
-import { Icons } from '../components/icons';
-import { Button } from '../components/ui/Button';
+import React, { useState, useEffect } from 'react';
 import { PageTitle } from '../components/ui/PageTitle';
+import { ProductCard } from '../components/ui/ProductCard';
+import { getPlatos, Plato } from '../services/platoService';
 import { useCart } from '../contexts/CartContext';
-import toast from 'react-hot-toast';
-
-// Interfaces para los tipos de datos
-interface Categoria {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  imagen_url: string;
-}
-
-interface Producto {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  precio: number;
-  categoria_id: number;
-  imagen_url: string;
-  disponible: boolean;
-}
-
-// Datos de ejemplo (mientras se implementa la conexión con la API)
-const categoriasEjemplo: Categoria[] = [
-  {
-    id: 1,
-    nombre: 'Hamburguesas',
-    descripcion: 'Deliciosas hamburguesas de carne y vegetarianas',
-    imagen_url: 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/categorias/hamburguesas.jpg'
-  },
-  {
-    id: 2,
-    nombre: 'Pizzas',
-    descripcion: 'Pizzas con diferentes ingredientes y tamaños',
-    imagen_url: 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/categorias/pizzas.jpg'
-  },
-  {
-    id: 3,
-    nombre: 'Bebidas',
-    descripcion: 'Refrescos, jugos naturales y bebidas calientes',
-    imagen_url: 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/categorias/bebidas.jpg'
-  },
-  {
-    id: 4,
-    nombre: 'Postres',
-    descripcion: 'Deliciosos postres y helados',
-    imagen_url: 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/categorias/postres.jpg'
-  }
-];
-
-const productosEjemplo: Producto[] = [
-  {
-    id: 1,
-    nombre: 'Hamburguesa Clásica',
-    descripcion: 'Hamburguesa con carne de res, lechuga, tomate y queso',
-    precio: 15000,
-    categoria_id: 1,
-    imagen_url: 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/platos/hamburguesa-clasica.jpg',
-    disponible: true
-  },
-  {
-    id: 2,
-    nombre: 'Hamburguesa Doble',
-    descripcion: 'Doble carne, doble queso y tocineta',
-    precio: 25000,
-    categoria_id: 1,
-    imagen_url: 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/platos/hamburguesa-doble.jpg',
-    disponible: true
-  },
-  {
-    id: 3,
-    nombre: 'Pizza Margarita',
-    descripcion: 'Pizza con salsa de tomate, queso mozzarella y albahaca',
-    precio: 35000,
-    categoria_id: 2,
-    imagen_url: 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/platos/pizza-margarita.jpg',
-    disponible: true
-  },
-  {
-    id: 4,
-    nombre: 'Pizza Pepperoni',
-    descripcion: 'Pizza con pepperoni y queso',
-    precio: 40000,
-    categoria_id: 2,
-    imagen_url: 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/platos/pizza-pepperoni.jpg',
-    disponible: true
-  },
-  {
-    id: 5,
-    nombre: 'Coca-Cola',
-    descripcion: 'Refresco de cola 500ml',
-    precio: 5000,
-    categoria_id: 3,
-    imagen_url: 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/platos/coca-cola.jpg',
-    disponible: true
-  },
-  {
-    id: 6,
-    nombre: 'Jugo Natural',
-    descripcion: 'Jugo natural de naranja o mandarina',
-    precio: 7000,
-    categoria_id: 3,
-    imagen_url: 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/platos/jugo-natural.jpg',
-    disponible: true
-  },
-  {
-    id: 7,
-    nombre: 'Helado de Vainilla',
-    descripcion: 'Helado cremoso de vainilla con toppings',
-    precio: 8000,
-    categoria_id: 4,
-    imagen_url: 'https://restaurant-items-by-danielxxomg.s3.amazonaws.com/platos/helado-vainilla.jpg',
-    disponible: true
-  }
-];
 
 export function MenuPage() {
-  const [categorias, setCategorias] = useState<Categoria[]>(categoriasEjemplo);
-  const [productos, setProductos] = useState<Producto[]>(productosEjemplo);
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<number | null>(null);
-  const [busqueda, setBusqueda] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [platos, setPlatos] = useState<Plato[]>([]);
+  const [categorias, setCategorias] = useState<{ id: string; nombre: string }[]>([]);
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { addItem } = useCart();
 
-  // Función que simula la conexión con la API (se reemplazará cuando esté listo el backend)
   useEffect(() => {
-    // Aquí se implementará la llamada a la API para obtener categorías y productos
-    // Por ahora usamos los datos de ejemplo
-    setIsLoading(true);
-    
-    // Simulamos un delay para mostrar el estado de carga
-    const timer = setTimeout(() => {
-      setCategorias(categoriasEjemplo);
-      setProductos(productosEjemplo);
-      setIsLoading(false);
-    }, 500);
-    
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Función para agregar productos al carrito
-  const handleAddToCart = (id: number) => {
-    const producto = productos.find(p => p.id === id);
-    if (producto) {
-      addItem({
-        id: producto.id,
-        nombre: producto.nombre,
-        precio: producto.precio,
-        imagen_url: producto.imagen_url || '',
-      });
-      toast.success(`¡${producto.nombre} agregado al carrito!`, {
-        duration: 2000,
-        position: 'bottom-right'
-      });
-    }
-  };
-
-  // Filtrar productos por categoría y búsqueda
-  const productosFiltrados = productos.filter(producto => {
-    const matchesCategoria = categoriaSeleccionada ? producto.categoria_id === categoriaSeleccionada : true;
-    const matchesBusqueda = producto.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-                            producto.descripcion.toLowerCase().includes(busqueda.toLowerCase());
-    return matchesCategoria && matchesBusqueda;
-  });
-
-  // Obtener el nombre de la categoría por su ID
-  const getCategoryName = (categoryId: number) => {
-    const category = categorias.find(cat => cat.id === categoryId);
-    return category ? category.nombre : '';
-  };
-
-  // Obtener icono correspondiente a la categoría
-  const getCategoryIcon = (categoryName: string) => {
-    const iconMap: Record<string, ReactNode> = {
-      'Hamburguesas': <Icons.sandwich className="h-5 w-5" />,
-      'Pizzas': <Icons.pizza className="h-5 w-5" />,
-      'Bebidas': <Icons.coffee className="h-5 w-5" />,
-      'Postres': <Icons.dessert className="h-5 w-5" />
+    const cargarPlatos = async () => {
+      setIsLoading(true);
+      try {
+        const platosData = await getPlatos();
+        setPlatos(platosData);
+        
+        // Extraer categorías únicas
+        const categoriasUnicas = platosData.reduce((acc: { id: string; nombre: string }[], plato) => {
+          if (!acc.some(cat => cat.id === plato.categoria_id) && plato.categoria_nombre) {
+            acc.push({
+              id: plato.categoria_id,
+              nombre: plato.categoria_nombre
+            });
+          }
+          return acc;
+        }, []);
+        
+        setCategorias(categoriasUnicas);
+        
+        // Seleccionar la primera categoría por defecto
+        if (categoriasUnicas.length > 0 && !categoriaSeleccionada) {
+          setCategoriaSeleccionada(categoriasUnicas[0].id);
+        }
+      } catch (error) {
+        console.error('Error al cargar platos:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
     
-    return iconMap[categoryName] || <Icons.restaurant className="h-5 w-5" />;
+    cargarPlatos();
+  }, [categoriaSeleccionada]);
+
+  // Filtrar platos por categoría
+  const platosFiltrados = categoriaSeleccionada
+    ? platos.filter(plato => plato.categoria_id === categoriaSeleccionada)
+    : platos;
+
+  // Función para agregar al carrito
+  const handleAddToCart = (plato: Plato) => {
+    addItem({
+      id: plato.id,
+      nombre: plato.nombre,
+      precio: plato.precio,
+      imagen_url: plato.imagen_url
+    });
   };
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-8">
       <PageTitle title="Menú" />
-      <div className="max-w-4xl mx-auto text-center mb-10">
-        <span className="text-2xl text-primary-500 mb-2">Saborea la Diferencia</span>
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-gray-100 mb-4">Nuestro Menú</h1>
-        <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          Descubre el sabor inigualable de nuestra comida preparada con ingredientes frescos y recetas exclusivas.
-        </p>
-      </div>
       
-      {/* Barra de búsqueda y filtros */}
-      <div className="mb-12 space-y-6">
-        <div className="max-w-md mx-auto">
-          <div className="relative flex w-full items-center">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Icons.search className="h-5 w-5 text-gray-400" />
-            </div>
-            <input
-              type="text"
-              placeholder="Buscar platillos, ingredientes..."
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-              className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 transition-colors dark:bg-gray-700 dark:text-white"
-            />
-          </div>
-        </div>
-        
-        <div className="flex flex-wrap justify-center gap-2">
-          <Button
-            variant="outline"
-            className={`rounded-full px-5 py-2.5 opacity-70 hover:opacity-100 transition-all border-gray-300 ${
-              categoriaSeleccionada === null 
-                ? 'bg-gray-900 text-white border-transparent opacity-100 hover:bg-gray-700'
-                : 'hover:bg-gray-200 dark:hover:bg-gray-700'
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">Nuestro Menú</h1>
+      
+      {/* Filtro de categorías */}
+      <div className="flex flex-wrap gap-2 mb-8">
+        {categorias.map(categoria => (
+          <button
+            key={categoria.id}
+            onClick={() => setCategoriaSeleccionada(categoria.id)}
+            className={`px-4 py-2 rounded-full text-sm font-medium ${
+              categoriaSeleccionada === categoria.id
+                ? 'bg-primary-600 text-white'
+                : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
             }`}
-            onClick={() => setCategoriaSeleccionada(null)}
           >
-            <Icons.restaurant className="h-5 w-5 mr-2" />
-            Todos
-          </Button>
-          
-          {categorias.map(categoria => (
-            <Button
-              key={categoria.id}
-              variant="outline"
-              className={`rounded-full px-5 py-2.5 opacity-70 hover:opacity-100 transition-all border-gray-300 ${
-                categoriaSeleccionada === categoria.id 
-                  ? 'bg-gray-900 text-white border-transparent opacity-100 hover:bg-gray-700'
-                  : 'hover:bg-gray-200 dark:hover:bg-gray-700'
-              }`}
-              onClick={() => setCategoriaSeleccionada(categoria.id)}
-            >
-              {getCategoryIcon(categoria.nombre)}
-              <span className="ml-2">{categoria.nombre}</span>
-            </Button>
-          ))}
-        </div>
+            {categoria.nombre}
+          </button>
+        ))}
       </div>
       
-      {/* Contenido principal - Lista de productos */}
       {isLoading ? (
-        <div className="flex justify-center items-center h-64">
+        <div className="flex justify-center items-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
         </div>
-      ) : productosFiltrados.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {productosFiltrados.map(producto => (
-            <ProductCard
-              key={producto.id}
-              id={producto.id}
-              nombre={producto.nombre}
-              descripcion={producto.descripcion}
-              precio={producto.precio}
-              imagen_url={producto.imagen_url}
-              disponible={producto.disponible}
-              categoria={getCategoryName(producto.categoria_id)}
-              onAddToCart={handleAddToCart}
-            />
-          ))}
+      ) : platosFiltrados.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-gray-600 dark:text-gray-300">No hay platos disponibles en esta categoría.</p>
         </div>
       ) : (
-        <div className="text-center py-12">
-          <Icons.search className="h-16 w-16 mx-auto text-gray-400 mb-4" />
-          <h3 className="mt-4 text-xl font-medium text-gray-900 dark:text-gray-100">No se encontraron productos</h3>
-          <p className="mt-2 text-gray-600 dark:text-gray-300">
-            Intenta con otra búsqueda o selecciona una categoría diferente.
-          </p>
-          <Button
-            variant="outline"
-            className="mt-4"
-            onClick={() => {
-              setBusqueda('');
-              setCategoriaSeleccionada(null);
-            }}
-          >
-            <Icons.search className="h-5 w-5 mr-2" />
-            Mostrar todos los productos
-          </Button>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {platosFiltrados.map(plato => (
+            <ProductCard
+              key={plato.id}
+              id={plato.id}
+              nombre={plato.nombre}
+              descripcion={plato.descripcion}
+              precio={plato.precio}
+              imagen_url={plato.imagen_url}
+              onAddToCart={() => handleAddToCart(plato)}
+            />
+          ))}
         </div>
       )}
     </div>

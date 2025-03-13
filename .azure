@@ -1,0 +1,20 @@
+---
+# Configuración para detección automática de Docker Compose en Azure App Service
+app_service:
+  type: multi_container
+  port: 80
+  compose_file: docker-compose.yml
+
+# Variables de entorno importantes
+environment:
+  required_vars:
+    - DATABASE_URL
+    - JWT_SECRET
+    - JWT_EXPIRATION
+  
+docker:
+  linux_fx_version: COMPOSE
+  registry_server_url: ${DOCKER_REGISTRY_SERVER:-}
+  registry_server_username: ${DOCKER_REGISTRY_USERNAME:-}
+  registry_server_password: ${DOCKER_REGISTRY_PASSWORD:-}
+--- 

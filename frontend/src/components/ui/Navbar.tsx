@@ -116,9 +116,9 @@ export function Navbar() {
             
             {isAuthenticated ? (
               <div className="relative flex items-center gap-4 ml-1">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <Link to="/perfil" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">
                   Hola, {user?.nombre}
-                </span>
+                </Link>
                 <Button 
                   variant="outline" 
                   size="sm"

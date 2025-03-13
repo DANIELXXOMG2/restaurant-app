@@ -1,11 +1,10 @@
 import axios from 'axios';
 
-// Configurar la URL base según el entorno
-const isProd = import.meta.env.PROD;
-// En producción usar la URL absoluta, en desarrollo usar la URL relativa con proxy
-const API_URL = isProd 
-  ? 'https://restaurant-app-tau-ten.vercel.app/api' 
-  : '/api';
+// Configurar la URL base según la variable de entorno
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
+console.log('Cargando variables de entorno');
+console.log(`- API URL: ${API_URL}`);
 
 // Configurar instancia de Axios con opciones avanzadas
 const apiClient = axios.create({
@@ -37,6 +36,7 @@ export interface RegisterData {
   password: string;
   telefono?: string;
   rol: string;
+  imagen_url?: string;
 }
 
 export interface LoginData {
@@ -45,10 +45,11 @@ export interface LoginData {
 }
 
 export interface UserData {
-  id: number;
+  id: string;
   nombre: string;
   email: string;
   rol: string;
+  imagen_url?: string;
 }
 
 export interface AuthResponse {

@@ -1,12 +1,14 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import authService from '../services/authService';
 
 // Definir el tipo de usuario
 interface User {
-  id: number;
+  id: string;
   nombre: string;
-  apellido: string;
+  apellido?: string;
   email: string;
   rol: 'admin' | 'cliente';
+  imagen_url?: string;
 }
 
 // Definir el tipo del contexto de autenticación
@@ -18,6 +20,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   error: string | null;
+  setUser: (user: User) => void;
 }
 
 // Crear el contexto
@@ -45,8 +48,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // Verificar si hay un token guardado al cargar la página
   useEffect(() => {
-    const storedToken = localStorage.getItem('auth_token');
-    const storedUser = localStorage.getItem('auth_user');
+    const storedToken = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
     
     if (storedToken && storedUser) {
       setToken(storedToken);
@@ -62,53 +65,34 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setError(null);
     
     try {
-      // En una implementación real, aquí se haría una petición al backend
-      // Por ahora, simulamos una respuesta exitosa con datos de ejemplo
+      // Usar el servicio real de autenticación
+      console.log('Intentando iniciar sesión con:', { email, passwordLength: password.length });
       
-      // Simulamos un delay para mostrar el estado de carga
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await authService.login({ email, password });
       
-      // Datos de ejemplo para simular una respuesta exitosa
-      if (email === 'admin@restaurante.com' && password === 'admin123') {
-        const userData: User = {
-          id: 1,
-          nombre: 'Admin',
-          apellido: 'Sistema',
-          email: 'admin@restaurante.com',
-          rol: 'admin'
-        };
-        
-        const fakeToken = 'fake_jwt_token_' + Math.random().toString(36).substring(2);
-        
-        // Guardar en localStorage
-        localStorage.setItem('auth_token', fakeToken);
-        localStorage.setItem('auth_user', JSON.stringify(userData));
-        
-        // Actualizar el estado
-        setUser(userData);
-        setToken(fakeToken);
-      } else if (email === 'cliente@gmail.com' && password === 'cliente123') {
-        const userData: User = {
-          id: 2,
-          nombre: 'Cliente',
-          apellido: 'Ejemplo',
-          email: 'cliente@gmail.com',
-          rol: 'cliente'
-        };
-        
-        const fakeToken = 'fake_jwt_token_' + Math.random().toString(36).substring(2);
-        
-        // Guardar en localStorage
-        localStorage.setItem('auth_token', fakeToken);
-        localStorage.setItem('auth_user', JSON.stringify(userData));
-        
-        // Actualizar el estado
-        setUser(userData);
-        setToken(fakeToken);
-      } else {
-        throw new Error('Credenciales inválidas');
-      }
+      // Utilizar la respuesta real del backend
+      const userData = response.user;
+      const authToken = response.token;
+      
+      // Asegurar que el ID sea string
+      const user: User = {
+        id: String(userData.id),
+        nombre: userData.nombre,
+        email: userData.email,
+        rol: userData.rol as 'admin' | 'cliente'
+      };
+      
+      console.log('Login exitoso:', { user, hasToken: !!authToken });
+      
+      // Guardar en localStorage
+      localStorage.setItem('token', authToken);
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      // Actualizar el estado
+      setUser(user);
+      setToken(authToken);
     } catch (error) {
+      console.error('Error en el login con el servicio real:', error);
       if (error instanceof Error) {
         setError(error.message);
       } else {
@@ -121,13 +105,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // Función para cerrar sesión
   const logout = () => {
-    // Eliminar del localStorage
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('auth_user');
+    // Utilizar el servicio real
+    authService.logout();
     
     // Actualizar el estado
     setUser(null);
     setToken(null);
+  };
+
+  // Función para actualizar datos del usuario
+  const updateUser = (updatedUser: User) => {
+    // Actualizar en localStorage
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+    
+    // Actualizar el estado
+    setUser(updatedUser);
   };
 
   // Valor del contexto
@@ -138,7 +130,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     isLoading,
     login,
     logout,
-    error
+    error,
+    setUser: updateUser
   };
 
   return (

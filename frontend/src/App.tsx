@@ -11,7 +11,9 @@ import { TitleUpdater } from './components/ui/TitleUpdater';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ImageUploadDemo from './pages/ImageUploadDemo';
 import { S3ImageChecker } from './pages/S3ImageChecker';
+import { S3TestPage } from './pages/S3TestPage';
 import PedidosPage from './pages/PedidosPage';
+import { UserProfilePage } from './pages/UserProfilePage';
 import './App.css';
 
 function App() {
@@ -38,8 +40,10 @@ function App() {
               <Route path="/pedido-exitoso" element={<OrderSuccessPage />} />
               <Route path="/promociones" element={<PromocionesTemp />} />
               <Route path="/locales" element={<LocalesTemp />} />
+              <Route path="/perfil" element={<UserProfilePage />} />
               <Route path="/admin/imagenes" element={<ImageUploadDemo />} />
               <Route path="/admin/verificar-imagenes" element={<S3ImageChecker />} />
+              <Route path="/admin/test-s3" element={<S3TestPage />} />
             </Routes>
           </main>
           <footer className="bg-white dark:bg-gray-800 border-t border-primary-100 dark:border-primary-900/30 py-8 relative z-10 mt-12">

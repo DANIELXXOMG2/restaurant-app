@@ -1,0 +1,1 @@
+-- Migración para modificar la tabla usuarios y hacer que apellido sea opcional

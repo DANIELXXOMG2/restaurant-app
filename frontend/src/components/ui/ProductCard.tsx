@@ -5,14 +5,14 @@ import { getImageProxy } from '../../services/s3Service';
 import { useEffect, useState } from 'react';
 
 interface ProductCardProps {
-  id: number;
+  id: string;
   nombre: string;
   descripcion: string;
   precio: number;
   imagen_url: string;
-  disponible: boolean;
-  categoria: string;
-  onAddToCart: (id: number) => void;
+  disponible?: boolean;
+  categoria?: string;
+  onAddToCart: (id: string) => void;
 }
 
 export function ProductCard({
@@ -21,7 +21,7 @@ export function ProductCard({
   descripcion,
   precio,
   imagen_url,
-  disponible,
+  disponible = true,
   categoria,
   onAddToCart
 }: ProductCardProps) {
@@ -73,9 +73,11 @@ export function ProductCard({
           className="w-full h-48 object-cover rounded-t-xl"
           onError={handleImageError}
         />
-        <div className="absolute top-2 right-2 bg-primary-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-          {categoria}
-        </div>
+        {categoria && (
+          <div className="absolute top-2 right-2 bg-primary-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+            {categoria}
+          </div>
+        )}
         {!disponible && (
           <div className="absolute inset-0 bg-gray-800 bg-opacity-70 flex items-center justify-center rounded-t-xl">
             <span className="text-white font-bold text-lg">No Disponible</span>

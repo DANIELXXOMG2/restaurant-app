@@ -4,12 +4,19 @@ import { CartItem as CartItemComponent } from '../components/ui/CartItem';
 import { Button } from '../components/ui/Button';
 import { PageTitle } from '../components/ui/PageTitle';
 import { useCart } from '../contexts/CartContext';
+import { useAuth } from '../contexts/AuthContext';
+import { crearPedido } from '../services/pedidoService';
 import toast from 'react-hot-toast';
+import { Icons } from '../components/icons';
+import axios from 'axios';
 
 export function CartPage() {
   const { items, removeItem, updateQuantity, getSubtotal, getTotal, getIVA, clearCart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const navigate = useNavigate();
+  const { user, token } = useAuth();
+  const API_URL = import.meta.env.VITE_API_URL || '/api';
 
   // Función para formatear el precio en pesos colombianos
   const formatPrice = (price: number) => {
@@ -20,44 +27,110 @@ export function CartPage() {
     }).format(price);
   };
 
-  // Función para realizar el pedido
+  // Función para finalizar la compra
   const handleCheckout = async () => {
+    if (!user || !token) {
+      toast.error('Debes iniciar sesión para realizar el pedido');
+      navigate('/login');
+      return;
+    }
+
     setIsSubmitting(true);
-    
+
     try {
-      // Aquí iría la lógica para enviar el pedido al backend
-      // Por ejemplo:
-      // const orderData = {
-      //   items: items.map(item => ({
-      //     plato_id: item.id,
-      //     cantidad: item.cantidad,
-      //     precio_unitario: item.precio,
-      //     subtotal: item.precio * item.cantidad
-      //   })),
-      //   subtotal,
-      //   total
-      // };
-      // await pedidoService.crearPedido(orderData, token);
+      // Preparar los detalles del pedido
+      const detalles = items.map(item => ({
+        plato_id: item.id,
+        cantidad: item.cantidad,
+        precio_unitario: item.precio,
+        subtotal: item.precio * item.cantidad
+      }));
+
+      // Crear el pedido
+      const pedido = {
+        usuario_id: user.id,
+        estado: 'pendiente' as 'pendiente' | 'en preparación' | 'listo' | 'entregado' | 'cancelado',
+        subtotal: getSubtotal(),
+        total: getTotal(),
+        detalles
+      };
+
+      // Enviar la solicitud a la API
+      await crearPedido(pedido, token);
+
+      // Mostrar notificación de éxito
+      toast.success('Pedido realizado con éxito');
       
-      // Simulamos una petición
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Mostrar mensaje de éxito
-      toast.success('¡Pedido realizado con éxito!');
-      
-      // Guardar estado de pedido completado para la página de éxito
-      sessionStorage.setItem('order_completed', 'true');
-      
-      // Vaciar el carrito
+      // Limpiar el carrito
       clearCart();
       
-      // Navegar a una página de éxito
-      navigate('/pedido-exitoso');
+      // Redirigir a la página de pedidos
+      navigate('/pedidos');
     } catch (error) {
-      console.error('Error al crear el pedido:', error);
-      toast.error('Error al procesar tu pedido. Inténtalo de nuevo.');
+      console.error('Error al realizar el pedido:', error);
+      toast.error('Error al realizar el pedido. Inténtalo de nuevo.');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // Función para descargar Excel del carrito
+  const handleDownloadExcel = async () => {
+    if (items.length === 0) {
+      toast.error('El carrito está vacío');
+      return;
+    }
+
+    setIsDownloading(true);
+
+    try {
+      // Preparar los datos del carrito
+      const cartData = {
+        items: items.map(item => ({
+          ...item,
+          descripcion: 'Producto de Pizza Daniel\'s'
+        })),
+        subtotal: getSubtotal(),
+        iva: getIVA(),
+        total: getTotal(),
+        // Incluir datos del usuario si está autenticado
+        usuario: user ? {
+          id: user.id,
+          nombre: user.nombre,
+          email: user.email
+        } : null
+      };
+
+      // Realizar la solicitud para generar el Excel
+      const response = await axios.post(
+        `${API_URL}/carrito/excel`, 
+        cartData, 
+        { 
+          responseType: 'blob',
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined
+        }
+      );
+
+      // Crear un objeto URL para el blob
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      
+      // Crear un enlace temporal y hacer clic en él para descargar
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `carrito_${Date.now()}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      
+      // Limpiar
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+      
+      toast.success('Excel generado correctamente');
+    } catch (error) {
+      console.error('Error al generar Excel:', error);
+      toast.error('Error al generar Excel. Inténtalo de nuevo.');
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -108,36 +181,48 @@ export function CartPage() {
           
           {/* Resumen del pedido */}
           <div className="lg:col-span-4 mt-8 lg:mt-0">
-            <div className="bg-white dark:bg-gray-800 shadow-sm rounded-md overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 shadow-sm rounded-md overflow-hidden sticky top-6">
               <div className="p-6">
                 <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Resumen del Pedido</h2>
-                
                 <div className="space-y-4">
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-300">Subtotal</span>
-                    <span className="text-gray-900 dark:text-gray-100 font-medium">{formatPrice(getSubtotal())}</span>
+                    <span className="text-gray-900 dark:text-gray-100">{formatPrice(getSubtotal())}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-300">IVA (19%)</span>
-                    <span className="text-gray-900 dark:text-gray-100 font-medium">{formatPrice(getIVA())}</span>
+                    <span className="text-gray-900 dark:text-gray-100">{formatPrice(getIVA())}</span>
                   </div>
                   <div className="border-t border-gray-200 dark:border-gray-700 pt-4 flex justify-between">
-                    <span className="text-lg font-bold text-gray-900 dark:text-gray-100">Total</span>
-                    <span className="text-lg font-bold text-blue-600 dark:text-blue-400">{formatPrice(getTotal())}</span>
+                    <span className="font-medium text-gray-900 dark:text-gray-100">Total</span>
+                    <span className="font-medium text-gray-900 dark:text-gray-100">{formatPrice(getTotal())}</span>
                   </div>
                 </div>
                 
-                <div className="mt-6">
-                  <Button 
-                    onClick={handleCheckout} 
-                    disabled={isSubmitting} 
+                <div className="mt-6 space-y-3">
+                  <Button
                     className="w-full"
+                    onClick={handleCheckout}
+                    disabled={isSubmitting || items.length === 0}
                   >
                     {isSubmitting ? 'Procesando...' : 'Finalizar Pedido'}
                   </Button>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 text-center">
-                    ¡Gracias por tu pedido! Te enviaremos una confirmación cuando esté listo.
-                  </p>
+                  
+                  <Button
+                    variant="outline"
+                    className="w-full flex items-center justify-center"
+                    onClick={handleDownloadExcel}
+                    disabled={isDownloading || items.length === 0}
+                  >
+                    {isDownloading ? (
+                      <span>Generando...</span>
+                    ) : (
+                      <>
+                        <Icons.excel className="h-4 w-4 mr-2" />
+                        <span>Descargar Excel</span>
+                      </>
+                    )}
+                  </Button>
                 </div>
               </div>
             </div>

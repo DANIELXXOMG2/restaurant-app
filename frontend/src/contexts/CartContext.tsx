@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 
 // Tipo para los productos en el carrito
 export interface CartItem {
-  id: number;
+  id: string;
   nombre: string;
   precio: number;
   cantidad: number;
@@ -13,8 +13,8 @@ export interface CartItem {
 interface CartContextType {
   items: CartItem[];
   addItem: (item: Omit<CartItem, 'cantidad'>) => void;
-  removeItem: (id: number) => void;
-  updateQuantity: (id: number, quantity: number) => void;
+  removeItem: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   getSubtotal: () => number;
   getTotal: () => number;
@@ -79,12 +79,12 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   };
   
   // Eliminar un item del carrito
-  const removeItem = (id: number) => {
+  const removeItem = (id: string) => {
     setItems(prevItems => prevItems.filter(item => item.id !== id));
   };
   
   // Actualizar la cantidad de un item
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (id: string, quantity: number) => {
     if (quantity <= 0) {
       removeItem(id);
       return;

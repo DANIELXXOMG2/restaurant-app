@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -6,6 +6,7 @@ import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { Icons } from '../icons';
+import ImageUploader from '../ImageUploader';
 
 // Esquema de validación con Zod
 const registerSchema = z.object({
@@ -19,6 +20,7 @@ const registerSchema = z.object({
   confirmPassword: z.string(),
   telefono: z.string().optional(),
   rol: z.enum(['cliente', 'administrador', 'empleado']).default('cliente'),
+  imagen_url: z.string().optional(),
 })
 .refine(data => data.password === data.confirmPassword, {
   message: 'Las contraseñas no coinciden',
@@ -37,6 +39,9 @@ export const RegisterForm: FC<RegisterFormProps> = ({
   onSubmit,
   isLoading = false 
 }) => {
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
   const methods = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -46,30 +51,70 @@ export const RegisterForm: FC<RegisterFormProps> = ({
       confirmPassword: '',
       telefono: '',
       rol: 'cliente',
+      imagen_url: '',
     },
   });
+
+  const handleImageUploadSuccess = (url: string) => {
+    setUploadedImageUrl(url);
+    methods.setValue('imagen_url', url);
+    setUploadError(null);
+  };
+
+  const handleImageUploadError = (error: string) => {
+    setUploadError(error);
+  };
 
   const handleSubmit = methods.handleSubmit((data) => {
     onSubmit(data);
   });
 
   return (
-    <Card 
-      title="Registro de Usuario"
-      subtitle="Complete el formulario para crear una cuenta nueva"
-      className="max-w-md w-full mx-auto"
-    >
-      <div className="flex justify-center mb-6">
-        <div className="h-20 w-20 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-          <Icons.register className="h-10 w-10 text-blue-600 dark:text-blue-400" />
+    <FormProvider {...methods}>
+      <Card 
+        title="Registro de Usuario"
+        subtitle="Complete el formulario para crear una cuenta nueva"
+        className="max-w-md w-full mx-auto"
+      >
+        <div className="flex flex-col items-center mb-6">
+          <button
+            type="button"
+            className="h-20 w-20 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center overflow-hidden relative hover:bg-blue-200 transition-colors"
+            onClick={() => document.getElementById('profile-image-upload-button')?.click()}
+          >
+            {uploadedImageUrl ? (
+              <img 
+                src={uploadedImageUrl} 
+                alt="Foto de perfil" 
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <Icons.register className="h-10 w-10 text-blue-600 dark:text-blue-400" />
+            )}
+          </button>
+          <p className="text-xs text-gray-500 mt-1">Haz clic para subir tu foto</p>
+          
+          <div className="mt-2" style={{ opacity: 0, height: 0, overflow: 'hidden' }}>
+            <ImageUploader
+              id="profile-image-upload"
+              folder="profile-images"
+              onUploadSuccess={handleImageUploadSuccess}
+              onUploadError={handleImageUploadError}
+              buttonText="Seleccionar imagen de perfil"
+              allowedTypes={['image/jpeg', 'image/png', 'image/webp']}
+              maxSizeMB={2}
+            />
+          </div>
+          
+          {uploadError && (
+            <p className="text-xs text-red-500 mt-1">{uploadError}</p>
+          )}
         </div>
-      </div>
-      
-      <FormProvider {...methods}>
+        
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="relative">
             <Input
-              label="Nombre completo"
+              label="Nombre"
               type="text"
               placeholder="Ingresa tu nombre completo"
               {...methods.register('nombre')}
@@ -95,35 +140,33 @@ export const RegisterForm: FC<RegisterFormProps> = ({
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="relative">
-              <Input
-                label="Teléfono (opcional)"
-                type="tel"
-                placeholder="000-000-0000"
-                {...methods.register('telefono')}
-                error={methods.formState.errors.telefono?.message}
-                className="pl-10"
-              />
-              <div className="absolute left-3 top-10">
-                <Icons.call className="h-5 w-5 text-gray-400" />
-              </div>
+          <div className="relative">
+            <Input
+              label="Teléfono (opcional)"
+              type="tel"
+              placeholder="000-000-0000"
+              {...methods.register('telefono')}
+              error={methods.formState.errors.telefono?.message}
+              className="pl-10"
+            />
+            <div className="absolute left-3 top-10">
+              <Icons.call className="h-5 w-5 text-gray-400" />
             </div>
-            
-            <div className="flex flex-col gap-1">
-              <label className="font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
-                <Icons.userSettings className="h-5 w-5 text-gray-400" />
-                Tipo de usuario
-              </label>
-              <select
-                {...methods.register('rol')}
-                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-              >
-                <option value="cliente">Cliente</option>
-                <option value="empleado">Empleado</option>
-                <option value="administrador">Administrador</option>
-              </select>
-            </div>
+          </div>
+          
+          <div className="flex flex-col gap-1">
+            <label className="font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
+              <Icons.userSettings className="h-5 w-5 text-gray-400" />
+              Tipo de usuario
+            </label>
+            <select
+              {...methods.register('rol')}
+              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            >
+              <option value="cliente">Cliente</option>
+              <option value="empleado">Empleado</option>
+              <option value="administrador">Administrador</option>
+            </select>
           </div>
           
           <div className="relative">
@@ -184,7 +227,7 @@ export const RegisterForm: FC<RegisterFormProps> = ({
             </p>
           </div>
         </form>
-      </FormProvider>
-    </Card>
+      </Card>
+    </FormProvider>
   );
 }; 

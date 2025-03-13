@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { Icons } from '../components/icons';
 import { Button } from '../components/ui/Button';
 import { PageTitle } from '../components/ui/PageTitle';
+import { useEffect, useState } from 'react';
+import { Estadisticas, getEstadisticas } from '../services/estadisticasService';
 
 interface FeatureCardProps {
   icon: React.ReactNode;
@@ -31,6 +33,28 @@ function FeatureCard({ icon, title, description, buttonText, buttonLink }: Featu
 }
 
 export function HomePage() {
+  const [estadisticas, setEstadisticas] = useState<Estadisticas>({
+    usuarios: 0,
+    pedidos: 0,
+    platos: 0
+  });
+  const [cargando, setCargando] = useState(true);
+
+  useEffect(() => {
+    const cargarEstadisticas = async () => {
+      try {
+        const datos = await getEstadisticas();
+        setEstadisticas(datos);
+      } catch (error) {
+        console.error('Error al cargar estadísticas:', error);
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    cargarEstadisticas();
+  }, []);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <PageTitle title="Inicio" />
@@ -99,21 +123,27 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Estadísticas (simuladas) */}
+      {/* Estadísticas (reales) */}
       <section className="mt-12 py-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">Nuestros Números</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">25+</div>
+            <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+              {cargando ? '...' : `${estadisticas.platos}+`}
+            </div>
             <div className="text-gray-600 dark:text-gray-300">Platos en el Menú</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">5,000+</div>
-            <div className="text-gray-600 dark:text-gray-300">Pedidos Completados</div>
+            <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+              {cargando ? '...' : `${estadisticas.usuarios}+`}
+            </div>
+            <div className="text-gray-600 dark:text-gray-300">Usuarios Registrados</div>
           </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">98%</div>
-            <div className="text-gray-600 dark:text-gray-300">Clientes Satisfechos</div>
+          <div className="text-center col-span-1 md:col-span-2">
+            <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+              {cargando ? '...' : `${estadisticas.pedidos}+`}
+            </div>
+            <div className="text-gray-600 dark:text-gray-300">Pedidos Completados</div>
           </div>
         </div>
       </section>

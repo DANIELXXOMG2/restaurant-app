@@ -2,12 +2,8 @@
 
 import axios from 'axios';
 
-// Configurar la URL base según el entorno
-const isProd = import.meta.env.PROD;
-// En producción usar la URL absoluta, en desarrollo usar la URL relativa con proxy
-const API_URL = isProd 
-  ? 'https://restaurant-app-tau-ten.vercel.app/api' 
-  : '/api';
+// Configurar la URL base según la variable de entorno
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Interfaces de datos
 export interface Categoria {
